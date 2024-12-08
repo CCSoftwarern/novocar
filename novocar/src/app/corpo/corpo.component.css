@@ -1,0 +1,34 @@
+.carousel-caption-left {
+    position: absolute;
+    left: 10%;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: left;
+  }
+  .p1{
+    font-size: 24px;
+  }
+
+  body { 
+    position: relative; 
+} 
+.section { 
+    padding: 100px 0; /* Ajuste o valor conforme necessário */ 
+    height: 100vh; /* Faz cada seção ocupar a altura total da janela */
+ } 
+ html { scroll-behavior: smooth; /* Rolagem suave */ } 
+
+
+
+ .card img{
+    height: 200px;
+    
+ }
+
+ .card-img-overlay {
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente para destacar o texto */
+  }
+  
+
+
+

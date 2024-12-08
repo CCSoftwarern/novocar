@@ -1,0 +1,147 @@
+
+<!-- Carrossel -->
+
+<div>
+
+    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          @for (imagem of imagensCarrocel; track $index) {
+            <div class="carousel-item active" data-bs-interval="10000">
+                <!-- Property Binding -->
+                <img [src]="imagem" class="d-block w-100" alt="...">
+                <div class="carousel-caption-left carousel-caption d-none d-md-block">
+                    <h1>Carros esportivos</h1>
+                    <p class="p1">Alta performance e um design aerodinâmico.</p>
+                    <button type="button" class="btn btn-warning btn-lg">Ver mais</button>
+                </div>
+              </div>
+          }  
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+
+</div>
+
+
+  <!-- Cards -->
+
+  <div id ="Modelos" class="container mt-5">
+    <h1>Modelos</h1>
+
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        @for (item of cardCarros; track $index) {
+        <!-- Utilização do de @for card dos modelos-->
+            <div class="col">
+                <div class="card h-100">
+                  <img src={{item.urlImagem}} class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">{{item.titulo}}</h5>
+                    <p class="card-text">{{item.breveDescricao}}</p>
+
+                    <button type="button" class="btn botoes-card btn-lg" data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="verConfirmar()">
+                        Comprar
+                      </button>
+    
+                  </div>
+                  <div class="card-footer">
+                    <small class="text-body-secondary">Last updated 3 mins ago</small>
+                  </div>
+                </div>
+              </div>
+
+        }    
+    </div>
+
+  </div>
+
+  <!-- Serviços -->
+
+  <div id="Servicos" class="container mt-5">
+    <h1>Serviços</h1>
+
+    <div class="container mt-5 ">
+        <div class="row">
+
+        <!-- Utilização do @for para carregar os cards dos serviços-->
+        @for (item of cardServicos; track $index) {
+
+            <div class="col-md-4">
+                <div class="card text-white">
+                  <img src={{item.urlImagem}} class="card-img" alt="Imagem do Carro">
+                  <div class="card-img-overlay d-flex align-items-center justify-content-center">
+                    <h5 class="card-title">{{item.titulo}}</h5>
+                  </div>
+                </div>
+              </div>
+
+        }
+    </div>
+          
+      </div>
+
+  </div>
+  
+
+  <!-- Sobre -->
+
+  <div id="Sobre" class="container mt-5">
+    <h1>Sobre</h1>
+
+    <div class="card mb-3">
+        <img src="https://www.wdgengenharia.com.br/images/WDG/Sobre/sobrenos.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Sobre</h5>
+          <p class="card-text">Sobre Nós - Novocar
+            Bem-vindo à Novocar, sua concessionária de carros de luxo de confiança. Com uma paixão inigualável por automóveis de alto desempenho, oferecemos uma experiência exclusiva para entusiastas de carros que procuram nada menos que a excelência.</p>
+        </div>
+      </div>
+
+
+  </div>
+
+  <!-- Modal -->
+
+<div>
+    @if (confirmar) {
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  ...
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Understood</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+    }
+    
+
+
+</div>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  
