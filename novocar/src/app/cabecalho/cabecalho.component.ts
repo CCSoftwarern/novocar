@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CorpoComponent } from "../corpo/corpo.component";
 
 @Component({
   selector: 'app-cabecalho',
@@ -8,10 +9,16 @@ import { Component } from '@angular/core';
   styleUrl: './cabecalho.component.css'
 })
 export class CabecalhoComponent {
+
+
   // items do menu Navibar
   itemsMenu:string[] = ['Modelos', 'Servicos', 'Sobre', 'Contato'];
   
   //Para rolar para sessão 
   rolarPara(section: string) 
   { document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' }); }
+
+
+
+
 }

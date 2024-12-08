@@ -1,3 +1,4 @@
+
 <div class="container-fluid mx-auto">
   <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top shadow LarguraNav ms-auto" data-bs-theme="dark">
     <div class="container-fluid">
@@ -13,12 +14,13 @@
           <!-- Aqui pegamos a lista de item menu e adicionamos a navibar -->
           @for (item of itemsMenu; track $index) {
             <li class="nav-item">
-              <!-- Utilizo aqui o Event Binding para rolar a ter a sessão clicado -->
-              <a class="nav-link iconeLogin"  (click)="rolarPara(item)">{{item}}</a>
+              <!-- Utilizo aqui o Event Binding para rolar até a sessão-->
+              <a class="nav-link iconeLogin cursor"  (click)="rolarPara(item)">{{item}}</a>
             </li>
           }
         </ul>
-        <div class="d-flex ms-auto"> <a class="iconeLogin" href="#"><i class="bi bi-person-circle"></i> Login</a></div>
+        <!-- Caso seja implentado um login é aqui -->
+        <!-- <div class="d-flex ms-auto"> <a class="iconeLogin" href="#"><i class="bi bi-person-circle"></i> Login</a></div> -->
       </div>
     </div>
 

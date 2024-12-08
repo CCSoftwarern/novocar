@@ -28,6 +28,22 @@
  .card-img-overlay {
     background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente para destacar o texto */
   }
+
+  h5{
+    font-style: oblique;
+  }
+
+  .card:hover { 
+    background-color: #f8f9fa; /* Cor de fundo ao passar o mouse */
+     transition: background-color 0.3s; /* Suaviza a transição */
+  }
+
+  .card-img-top { 
+    width: 100%; 
+    height: auto; /* Mantém a proporção da imagem */ 
+    object-fit: cover; /* Ajusta a imagem para cobrir o card */ 
+  }
+
   
 
 

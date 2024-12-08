@@ -1,28 +1,31 @@
 
+
+
 <!-- Carrossel -->
 
-<div>
+<div id="carosel">
 
     <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
-          @for (imagem of imagensCarrocel; track $index) {
-            <div class="carousel-item active" data-bs-interval="10000">
+          @for (item of imagensCarrocell; track $index) {
+             <!-- Property Binding usado para carregar a classe do item carrosel, devido ao tipo ativo-->
+            <div [class]="item.classe" data-bs-interval=item.tempo>
                 <!-- Property Binding -->
-                <img [src]="imagem" class="d-block w-100" alt="...">
+                <img [src]="item.imagem" class="d-block w-100" alt="...">
                 <div class="carousel-caption-left carousel-caption d-none d-md-block">
-                    <h1>Carros esportivos</h1>
-                    <p class="p1">Alta performance e um design aerodinâmico.</p>
+                    <h1>{{item.titulo}}</h1>
+                    <p class="p1">{{ item.paragrafo }}</p>
                     <button type="button" class="btn btn-warning btn-lg">Ver mais</button>
                 </div>
               </div>
           }  
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
+          <span class="visually-hidden">Anterior</span>
         </button>
         <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
           <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
+          <span class="visually-hidden">Proxímo</span>
         </button>
       </div>
 
@@ -31,49 +34,81 @@
 
   <!-- Cards -->
 
+
   <div id ="Modelos" class="container mt-5">
-    <h1>Modelos</h1>
+    <h2><i class="bi bi-car-front-fill"></i> Modelos</h2>
+  
 
     <div class="row row-cols-1 row-cols-md-4 g-4">
         @for (item of cardCarros; track $index) {
         <!-- Utilização do de @for card dos modelos-->
             <div class="col">
-                <div class="card h-100">
+                <div class="card h-100 shadow-sm">
                   <img src={{item.urlImagem}} class="card-img-top" alt="...">
                   <div class="card-body">
                     <h5 class="card-title">{{item.titulo}}</h5>
                     <p class="card-text">{{item.breveDescricao}}</p>
+                    <div class="d-flex justify-content-between">
+                      <p class="small"><a href="#!" class="text-muted">carros</a></p>
+                      <!-- aqui eu uso a interpolação uma maneira de formatar moeda e somo esse valor 50000 dá um efeito de desconto -->
+                      <p class="small text-danger"><s>{{formatarMoeda(item.valor + 50000)}}</s></p>
+                    </div>
 
-                    <button type="button" class="btn botoes-card btn-lg" data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="verConfirmar()">
-                        Comprar
+                    <div class="d-flex justify-content-between mb-3">
+                      <h5 class="mb-0">{{item.titulo}}</h5>
+                      <h5 class="text-dark mb-0">{{formatarMoeda(item.valor)}}</h5>
+                    </div>
+                    @if (item.disponivel === 0) {
+
+                      <button type="button" class="btn botoes-card btn-lg" disabled data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="verConfirmar()">
+                        Indisponível
                       </button>
+
+                    } @else {
+
+                      <button type="button" class="btn botoes-card btn-lg" data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="verConfirmar()">
+                        Eu quero
+                      </button>
+                    }
     
                   </div>
-                  <div class="card-footer">
-                    <small class="text-body-secondary">Last updated 3 mins ago</small>
-                  </div>
                 </div>
+
               </div>
 
-        }    
+        }
+
+   
+        
     </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+      <button class="btn btn-light me-md-2" type="button" (click)="rolarPara('carosel')">Voltar ao topo</button>
+    </div>
+  
+    <!-- Usando imput -->
+     
+    <app-corpo-filho 
+    [titulo1]="'Feliz natal é na NovoCar'" (acaoAlerta)="evento()"
+    [detalhes]="'Preços imperdíveis, condições de pagamento melhores ainda!'">
+   </app-corpo-filho>
 
   </div>
 
   <!-- Serviços -->
 
   <div id="Servicos" class="container mt-5">
-    <h1>Serviços</h1>
+    <h2><i class="bi bi-gear-fill"></i> Serviços</h2>
 
     <div class="container mt-5 ">
-        <div class="row">
+        <div class="row ">
 
         <!-- Utilização do @for para carregar os cards dos serviços-->
         @for (item of cardServicos; track $index) {
 
-            <div class="col-md-4">
-                <div class="card text-white">
-                  <img src={{item.urlImagem}} class="card-img" alt="Imagem do Carro">
+            <div class="col-md-4 shadow-sm ">
+                <div class="card text-white cursor hover">
+                  <img src={{item.urlImagem}} class="card-img " alt="Imagem do Carro">
                   <div class="card-img-overlay d-flex align-items-center justify-content-center">
                     <h5 class="card-title">{{item.titulo}}</h5>
                   </div>
@@ -84,26 +119,38 @@
     </div>
           
       </div>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+        <button class="btn btn-light me-md-2" type="button" (click)="rolarPara('carosel')">Voltar ao topo</button>
+      </div>
 
   </div>
+
   
 
   <!-- Sobre -->
 
   <div id="Sobre" class="container mt-5">
-    <h1>Sobre</h1>
+    <h2><i class="bi bi-info-circle-fill"></i> Sobre</h2>
 
-    <div class="card mb-3">
-        <img src="https://www.wdgengenharia.com.br/images/WDG/Sobre/sobrenos.jpg" class="card-img-top" alt="...">
+    <div class="card mb-3 mt-5">
+        <img src="https://www.dgmassessoria.com.br/wp-content/uploads/2019/09/quem-somos.png" class="card-img-top" alt="...">
         <div class="card-body">
           <h5 class="card-title">Sobre</h5>
-          <p class="card-text">Sobre Nós - Novocar
+          <p class="card-text p1">
             Bem-vindo à Novocar, sua concessionária de carros de luxo de confiança. Com uma paixão inigualável por automóveis de alto desempenho, oferecemos uma experiência exclusiva para entusiastas de carros que procuram nada menos que a excelência.</p>
         </div>
       </div>
+      <br>
+      <br>
+      <br>
 
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+        <button class="btn btn-light me-md-2" type="button" (click)="rolarPara('carosel')">Voltar ao topo</button>
+      </div>
 
   </div>
+
+
 
   <!-- Modal -->
 
@@ -113,25 +160,25 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                  <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirmação</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  ...
+                  Você realmente deseja comprar esse veiculo?
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Understood</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+                  <button type="button" class="btn btn-primary">Sim</button>
                 </div>
               </div>
             </div>
           </div>
-
     }
     
-
-
 </div>
+
+<!-- Voltar para o topo -->
+
 
 
 
