@@ -11,7 +11,8 @@ import { CorpoFilhoComponent } from "../corpo-filho/corpo-filho.component";
 export class CorpoComponent {
 
   titulo= ''
-  showButton: boolean = false;
+  
+  confirmar: boolean = true; //
 
   //imagens carrosel
 
@@ -22,7 +23,7 @@ export class CorpoComponent {
 
   ]
 
-  confirmar: boolean = true;
+  
 
   // Criando um array com os meus cards de carros 
 
@@ -57,20 +58,18 @@ export class CorpoComponent {
     const formatoMoeda = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }); 
     return formatoMoeda.format(valor); }
 
+  
 evento(){
   alert("Apartir daqui implementamos um simulador")
 }
 
-@HostListener('window:scroll', [])
-onWindowScroll() {
- // Mostrar o botão após rolar 300px
-    this.showButton = true;
-
-}
+// sobe para o topo da página
 
 topFunction() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+// vai até a sessão clicada
 
 rolarPara(section: string) 
   { document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' }); }
