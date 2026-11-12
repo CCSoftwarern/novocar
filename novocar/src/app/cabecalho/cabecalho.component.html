@@ -1,30 +1,59 @@
-
-<div class="container-fluid mx-auto">
-  <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top shadow LarguraNav ms-auto" data-bs-theme="dark">
+<header>
+  <nav
+    class="navbar navbar-expand-lg navbar-dark fixed-top shadow LarguraNav"
+    data-bs-theme="dark"
+    aria-label="Navegação principal"
+  >
     <div class="container-fluid">
-      <a class="navbar-brand navbar-center" href="#"><i class="bi-car-front" style="font-size: 2rem; "> NovoCar</i>
+
+      <!-- Marca -->
+      <a class="navbar-brand d-flex align-items-center gap-2" routerLink="/">
+        <i class="bi bi-car-front brand-icon" aria-hidden="true"></i>
+        <span>FlexCar</span>
       </a>
 
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <!-- Botão hamburguer (mobile) -->
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown"
+        aria-expanded="false"
+        aria-label="Abrir menu de navegação"
+      >
         <span class="navbar-toggler-icon"></span>
       </button>
+
+      <!-- Conteúdo colapsável -->
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav">
-          <!-- Aqui pegamos a lista de item menu e adicionamos a navibar -->
+
+        <!-- Itens de seção -->
+        <ul class="navbar-nav mx-auto">
           @for (item of itemsMenu; track $index) {
             <li class="nav-item">
-              <!-- Utilizo aqui o Event Binding para rolar até a sessão-->
-              <a class="nav-link iconeLogin cursor"  (click)="rolarPara(item)">{{item}}</a>
+              <a
+                class="nav-link iconeLogin cursor"
+                role="button"
+                tabindex="0"
+                  (click)="rolarPara(item.secao)"
+                (keydown.enter)="rolarPara(item.secao)"
+              >{{ item.rotulo }}</a>
             </li>
           }
         </ul>
-        <!-- Caso seja implentado um login é aqui -->
-        <!-- <div class="d-flex ms-auto"> <a class="iconeLogin" href="#"><i class="bi bi-person-circle"></i> Login</a></div> -->
+
+        <!-- Login -->
+        <a
+          class="iconeLogin d-flex align-items-center gap-2"
+          routerLink="/login"
+          routerLinkActive="active"
+        >
+          <i class="bi bi-person-circle" aria-hidden="true"></i>
+          <span>Login</span>
+        </a>
+
       </div>
     </div>
-
   </nav>
-
-
-</div>
+</header>

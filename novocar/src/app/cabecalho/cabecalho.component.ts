@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { CorpoComponent } from "../corpo/corpo.component";
+import { RouterLink, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-cabecalho',
   standalone: true,
-  imports: [],
+  imports: [RouterModule, RouterLink],
   templateUrl: './cabecalho.component.html',
   styleUrl: './cabecalho.component.css'
 })
@@ -12,10 +12,15 @@ export class CabecalhoComponent {
 
 
   // items do menu Navibar
-  itemsMenu:string[] = ['Modelos', 'Servicos', 'Sobre', 'Contato'];
-  
-  //Para rolar para sessão 
-  rolarPara(section: string) 
+  itemsMenu = [
+  { rotulo: 'Modelos',  secao: 'Modelos'  },
+  { rotulo: 'Serviços', secao: 'Servicos' },
+  { rotulo: 'Sobre',    secao: 'Sobre'    },
+  { rotulo: 'Contato',  secao: 'Contato'  }, // criar a seção no corpo
+];
+
+  //Para rolar para sessão
+  rolarPara(section: string)
   { document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' }); }
 
 

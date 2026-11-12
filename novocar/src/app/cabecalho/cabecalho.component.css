@@ -1,19 +1,23 @@
-.navbar-center { 
-    position: absolute; 
-    left: 50%; 
-    transform: 
-    translateX(-50%);}
-
-.iconeLogin{
-    color: gray;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.iconeLogin:hover{
-    color: whitesmoke;
+:host {
+  display: block;
 }
 
 .LarguraNav {
-    height: 80px;
+  height: 80px;
+}
+
+.brand-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.iconeLogin {
+  color: gray;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.iconeLogin:hover,
+.iconeLogin.active {
+  color: whitesmoke;
 }
