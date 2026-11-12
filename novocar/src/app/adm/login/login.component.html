@@ -1,4 +1,4 @@
-<div class="card login-card shadow-lg">
+<div class="card login-card">
   <div class="card-body p-4 p-md-5">
 
     <!-- Marca -->
@@ -16,12 +16,12 @@
           id="usuario"
           type="text"
           class="form-control"
-          formControlName="usuario"
+          formControlName="nome"
           placeholder="Digite seu usuário"
           autocomplete="username"
         />
-        @if (loginForm.get('usuario')?.invalid && loginForm.get('usuario')?.touched) {
-          <div class="text-danger small mt-1">Informe o usuário.</div>
+        @if (loginForm.get('nome')?.invalid && loginForm.get('nome')?.touched) {
+          <div class="text-danger small mt-1">Informe o nome de usuário.</div>
         }
       </div>
 

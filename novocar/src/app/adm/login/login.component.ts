@@ -1,6 +1,7 @@
+import { AutenticacaoService } from './../../service/autenticacao.service';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,19 +12,34 @@ import { RouterLink } from '@angular/router';
 })
 export class LoginComponent {
   private fb = inject(FormBuilder);
+  private autenticacaoService = inject(AutenticacaoService);
+  private router = inject(Router);
 
   loginForm = this.fb.group({
-    usuario: ['', Validators.required],
+    nome: ['', Validators.required],
     senha: ['', Validators.required]
   });
 
   entrar(): void {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      return;
-    }
-
-    console.log('Login:', this.loginForm.value);
-    // TODO: chamar o serviço de autenticação e redirecionar
+  if (this.loginForm.invalid) {
+    this.loginForm.markAllAsTouched();
+    return;
   }
+
+  const { nome, senha } = this.loginForm.getRawValue();
+
+  if (nome === null || senha === null) return;
+
+  this.autenticacaoService.login(nome, senha).subscribe({
+   next: (resposta) => {
+        localStorage.setItem('token', resposta.token);
+        localStorage.setItem('perfil', resposta.perfil);   // útil pra guardar o perfil
+        this.router.navigate(['/main']);                   // <<< redireciona
+      },
+      error: (erro) => {
+        console.error('Não foi possível fazer login:', erro);
+      }
+  })
+
+}
 }

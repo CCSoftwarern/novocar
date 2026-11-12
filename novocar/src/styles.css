@@ -1,11 +1,23 @@
 /* ===== Variáveis globais ===== */
 :root {
-  --primary-color: #000;
+  /* Preto emborrachado: menos duro que #000, com profundidade */
+  --primary-color: #1b1b1b;
+  --primary-color-dark: #0b0b0b;
+  --primary-color-light: #2c2c2c;
+
   --second-color: #fff;
   --success-color: green;
   --text-color: var(--second-color);
   --icon-color: var(--second-color);
   --botoes-card-color: gray;
+
+  /* Ruído sutil que dá o aspecto de borracha */
+  --rubber-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.16'/%3E%3C/svg%3E");
+
+  /* Brilho no topo + sombra interna = superfície emborrachada */
+  --rubber-inset: inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.65);
+  --rubber-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
 }
 
 /* ===== Base ===== */
@@ -15,17 +27,37 @@ html {
 
 body {
   background-color: var(--second-color);
+  color: #212529;
 }
 
 /* ===== Navbar ===== */
 .navbar {
   background-color: var(--primary-color);
+  background-image: var(--rubber-texture),
+    linear-gradient(180deg, var(--primary-color-light) 0%, #171717 55%, var(--primary-color-dark) 100%);
+  background-blend-mode: soft-light, normal;
+  box-shadow: var(--rubber-inset), var(--rubber-shadow);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   color: var(--second-color);
 }
 
-/* Só o menu colapsável do navbar, não todos os .collapse */
-.navbar .navbar-collapse {
-  background-color: var(--primary-color);
+/* O .shadow do Bootstrap usa !important e apagaria o relevo emborrachado */
+.navbar.shadow {
+  box-shadow: var(--rubber-inset), var(--rubber-shadow) !important;
+}
+
+/* Menu colapsável (só no mobile, para não afetar outros .collapse) */
+@media (max-width: 991.98px) {
+  .navbar .navbar-collapse {
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    background-color: var(--primary-color);
+    background-image: var(--rubber-texture),
+      linear-gradient(180deg, #242424 0%, #0f0f0f 100%);
+    background-blend-mode: soft-light, normal;
+    box-shadow: var(--rubber-inset), var(--rubber-shadow);
+  }
 }
 
 /* ===== Ícones ===== */
@@ -38,11 +70,39 @@ body {
 /* ===== Botões dos cards ===== */
 .botoes-card {
   background-color: var(--primary-color);
+  background-image: var(--rubber-texture),
+    linear-gradient(180deg, #2e2e2e 0%, #181818 55%, #0c0c0c 100%);
+  background-blend-mode: soft-light, normal;
   color: var(--text-color);
-  border-color: var(--primary-color);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--rubber-inset), 0 4px 10px rgba(0, 0, 0, 0.35);
+  transition: filter 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.botoes-card:hover {
+  filter: brightness(1.15);
+  color: var(--text-color);
+}
+
+.botoes-card:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.botoes-card:disabled {
+  filter: grayscale(0.35) brightness(0.9);
+  opacity: 0.75;
+}
+
+/* ===== Rodapé ===== */
+footer.bg-dark {
+  background-color: var(--primary-color) !important;
+  background-image: var(--rubber-texture),
+    linear-gradient(180deg, #202020 0%, #111 100%);
+  background-blend-mode: soft-light, normal;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
 
 .cursor {
   cursor: pointer;
 }
-
