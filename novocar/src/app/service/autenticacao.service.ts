@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { catchError, map } from 'rxjs/operators';
 export class AutenticacaoService {
 
   constructor(private http: HttpClient) { }
-  private apiUrl = 'http://localhost:8080/auth/login'; // Substitua pela URL da sua API
+  private apiUrl = `${environment.apiUrl}/auth/login`; // Substitua pela URL da sua API
 
   login(nome: string, senha: string): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });

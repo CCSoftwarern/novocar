@@ -18,7 +18,7 @@
                     <button type="button" class="btn btn-warning btn-lg">Ver mais</button>
                 </div>
               </div>
-          }  
+          }
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
           <span class="visually-hidden">Anterior</span>
@@ -37,28 +37,28 @@
 
   <div id ="Modelos" class="container mt-5">
     <h2><i class="bi bi-car-front-fill"></i> Modelos</h2>
-  
+
 
     <div class="row row-cols-1 row-cols-md-4 g-4">
-        @for (item of cardCarros; track $index) {
+        @for (item of carros; track $index) {
         <!-- Utilização do de @for card dos modelos-->
             <div class="col">
                 <div class="card h-100 shadow-sm">
                   <img src={{item.urlImagem}} class="card-img-top" alt="...">
                   <div class="card-body">
-                    <h5 class="card-title">{{item.titulo}}</h5>
-                    <p class="card-text">{{item.breveDescricao}}</p>
+                    <h5 class="card-title">{{item.modelo}}</h5>
+                    <p class="card-text">{{item.descricao}}</p>
                     <div class="d-flex justify-content-between">
                       <p class="small"><a href="#!" class="text-muted">carros</a></p>
                       <!-- aqui eu uso a interpolação uma maneira de formatar moeda e somo esse valor 50000 dá um efeito de desconto -->
-                      <p class="small text-danger"><s>{{formatarMoeda(item.valor + 50000)}}</s></p>
+                      <p class="small text-danger"><s>{{formatarMoeda(item.preco + 50000)}}</s></p>
                     </div>
 
                     <div class="d-flex justify-content-between mb-3">
                       <h5 class="mb-0">{{item.titulo}}</h5>
-                      <h5 class="text-dark mb-0">{{formatarMoeda(item.valor)}}</h5>
+                      <h5 class="text-dark mb-0">{{formatarMoeda(item.preco)}}</h5>
                     </div>
-                    @if (item.disponivel === 0) {
+                    @if (item.situacao === 0) {
 
                       <button type="button" class="btn botoes-card btn-lg" disabled data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="verConfirmar()">
                         Indisponível
@@ -70,7 +70,7 @@
                         Eu quero
                       </button>
                     }
-    
+
                   </div>
                 </div>
 
@@ -78,17 +78,17 @@
 
         }
 
-   
-        
+
+
     </div>
 
     <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
       <button class="btn btn-light me-md-2" type="button" (click)="rolarPara('carosel')">Voltar ao topo</button>
     </div>
-  
+
     <!-- Usando imput -->
-     
-    <app-corpo-filho 
+
+    <app-corpo-filho
     [titulo1]="'Feliz natal é na NovoCar'" (acaoAlerta)="evento()"
     [detalhes]="'Preços imperdíveis, condições de pagamento melhores ainda!'">
    </app-corpo-filho>
@@ -117,7 +117,7 @@
 
         }
     </div>
-          
+
       </div>
       <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
         <button class="btn btn-light me-md-2" type="button" (click)="rolarPara('carosel')">Voltar ao topo</button>
@@ -125,7 +125,7 @@
 
   </div>
 
-  
+
 
   <!-- Sobre -->
 
@@ -174,7 +174,7 @@
             </div>
           </div>
     }
-    
+
 </div>
 
 <!-- Voltar para o topo -->
@@ -184,11 +184,10 @@
 
 
 
-  
 
 
 
 
-  
 
-  
+
+

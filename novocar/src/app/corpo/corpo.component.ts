@@ -1,18 +1,22 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { CorpoFilhoComponent } from "../corpo-filho/corpo-filho.component";
+import { CarrosService } from '../service/carros.service';
 
 @Component({
   selector: 'app-corpo',
   standalone: true,
-  imports: [CorpoFilhoComponent,],
+  imports: [CorpoFilhoComponent],
   templateUrl: './corpo.component.html',
   styleUrl: './corpo.component.css'
 })
-export class CorpoComponent {
+export class CorpoComponent implements OnInit {
+  carros: any[] = [];
 
   titulo= ''
-  
+
   confirmar: boolean = true; //
+
+
 
   //imagens carrosel
 
@@ -23,16 +27,16 @@ export class CorpoComponent {
 
   ]
 
-  
 
-  // Criando um array com os meus cards de carros 
 
-  cardCarros: Array<{urlImagem:string, titulo:string, valor:number, breveDescricao:string, disponivel:number}>=[
-    {urlImagem:'https://nxboats.com.br/wp-content/uploads/2023/11/Lamborghini.jpg', titulo: 'Lamborghini', valor:1300000.00, breveDescricao: 'LAMBORGHINI GALLARDO SUPERLEGGERA LP 570-4 5.2 V10',disponivel:1},
-    {urlImagem:'https://nxboats.com.br/wp-content/uploads/2023/11/aston-martin.jpg', titulo: 'Aston Martin', valor:445000.00, breveDescricao: '5.2 V12 TURBO GASOLINA 770 ULTIMATE COUPE AUTOMÁTICO',disponivel:1},
-    {urlImagem:'https://nxboats.com.br/wp-content/uploads/2023/11/ferrari.jpg', titulo: 'Ferrari', valor:800255.00, breveDescricao: 'Ferrari 296 GTS 2024, supercarro híbrido de última geração, combinando um potente motor V6 biturbo',disponivel:1},
-    {urlImagem:'https://fotos-jornaldocarro-estadao.nyc3.cdn.digitaloceanspaces.com/wp-content/uploads/2024/04/23154842/Mercedes-AMG-GT-63S-E-Performance-e-hibrido-plug-in-mais-rapido-da-historia-da-Mercedes.png', titulo: 'Mercedes-AMG GT 63S', valor:1635000.00, breveDescricao: 'Novo GT 63S E Performance é o Mercedes-AMG mais rápido da história',disponivel:0}
-  ];
+  // Criando um array com os meus cards de carros
+
+  // cardCarros: Array<{urlImagem:string, titulo:string, valor:number, breveDescricao:string, disponivel:number}>=[
+  //   {urlImagem:'https://nxboats.com.br/wp-content/uploads/2023/11/Lamborghini.jpg', titulo: 'Lamborghini', valor:1300000.00, breveDescricao: 'LAMBORGHINI GALLARDO SUPERLEGGERA LP 570-4 5.2 V10',disponivel:1},
+  //   {urlImagem:'https://nxboats.com.br/wp-content/uploads/2023/11/aston-martin.jpg', titulo: 'Aston Martin', valor:445000.00, breveDescricao: '5.2 V12 TURBO GASOLINA 770 ULTIMATE COUPE AUTOMÁTICO',disponivel:1},
+  //   {urlImagem:'https://nxboats.com.br/wp-content/uploads/2023/11/ferrari.jpg', titulo: 'Ferrari', valor:800255.00, breveDescricao: 'Ferrari 296 GTS 2024, supercarro híbrido de última geração, combinando um potente motor V6 biturbo',disponivel:1},
+  //   {urlImagem:'https://fotos-jornaldocarro-estadao.nyc3.cdn.digitaloceanspaces.com/wp-content/uploads/2024/04/23154842/Mercedes-AMG-GT-63S-E-Performance-e-hibrido-plug-in-mais-rapido-da-historia-da-Mercedes.png', titulo: 'Mercedes-AMG GT 63S', valor:1635000.00, breveDescricao: 'Novo GT 63S E Performance é o Mercedes-AMG mais rápido da história',disponivel:0}
+  // ];
 
   // criando um array com os meus serviços
   cardServicos: Array<{urlImagem:string, titulo:string}>=[
@@ -43,22 +47,25 @@ export class CorpoComponent {
 
 
 
-  constructor() { };
+  constructor( private carrosService: CarrosService) { }ngOnInit(): void {
+    this.onGetCarros();
+  }
+;
 
-  // pra confirmar a compra 
+  // pra confirmar a compra
 
   verConfirmar(){
     this.confirmar = true;
   }
 
 
-  // uma função para formatar moeda 
+  // uma função para formatar moeda
 
-  formatarMoeda(valor: number): string { 
-    const formatoMoeda = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }); 
+  formatarMoeda(valor: number): string {
+    const formatoMoeda = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
     return formatoMoeda.format(valor); }
 
-  
+
 evento(){
   alert("Apartir daqui implementamos um simulador")
 }
@@ -71,8 +78,22 @@ topFunction() {
 
 // vai até a sessão clicada
 
-rolarPara(section: string) 
+rolarPara(section: string)
   { document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' }); }
+
+
+  //carregar carros do backend
+onGetCarros(): void {
+    this.carrosService.getCarros().subscribe({
+      next: (response) => {
+        this.carros = response;
+        console.log('Carros recebidos:', response);
+      },
+      error: (error) => {
+        console.error('Erro ao obter carros:', error);
+      }
+    });
+  }
 
 
 }
