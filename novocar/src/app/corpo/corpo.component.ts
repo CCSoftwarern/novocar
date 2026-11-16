@@ -3,11 +3,10 @@ import { CorpoFilhoComponent } from "../corpo-filho/corpo-filho.component";
 import { CarrosService } from '../service/carros.service';
 
 @Component({
-  selector: 'app-corpo',
-  standalone: true,
-  imports: [CorpoFilhoComponent],
-  templateUrl: './corpo.component.html',
-  styleUrl: './corpo.component.css'
+    selector: 'app-corpo',
+    imports: [CorpoFilhoComponent],
+    templateUrl: './corpo.component.html',
+    styleUrl: './corpo.component.css'
 })
 export class CorpoComponent implements OnInit {
   carros: any[] = [];

@@ -1,1 +1,39 @@
-<p>main works!</p>
+<div class="layout-container">
+  <!-- Menu Lateral -->
+  <aside class="sidebar">
+    <div class="logo">
+      <i class="pi pi-car" style="font-size: 2rem; margin-right: 0.5rem;"></i>
+      <h3>NovoCar</h3>
+    </div>
+    <p-panelMenu [model]="itensMenu" [style]="{ width: '100%' }"></p-panelMenu>
+  </aside>
+
+  <!-- Área de Conteúdo com Abas -->
+  <main class="content-area">
+    <p-tabView 
+      *ngIf="abasAbertas.length > 0; else telaInicial"
+      [(activeIndex)]="indiceAbaAtiva" 
+      [scrollable]="true"
+      (onClose)="fecharAba($event)">
+      
+<p-tabPanel *ngFor="let aba of abasAbertas" [header]="aba.titulo" [closable]="true" >
+
+  @switch (aba.id) {
+    @case ('clientes') { <app-clientes /> }
+    @case ('veiculos') { <app-veiculos /> }
+    @case ('agendar')  { <app-agendar /> }
+    @case ('consulta') { <app-consulta /> }
+  }
+</p-tabPanel>
+
+    </p-tabView>
+
+    <!-- Mensagem quando nenhuma aba estiver aberta -->
+    <ng-template #telaInicial>
+      <div class="empty-state">
+        <i class="pi pi-arrow-left" style="font-size: 2rem"></i>
+        <p>Selecione uma opção no menu lateral para abrir uma aba.</p>
+      </div>
+    </ng-template>
+  </main>
+</div>

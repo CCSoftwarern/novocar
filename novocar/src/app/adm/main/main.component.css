@@ -1,0 +1,43 @@
+.layout-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  /* background-color: var(--surface-card, var(--p-surface-900)); */
+  border-right: 1px solid var(--surface-border, var(--p-surface-700));
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.logo {
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--surface-border, var(--p-surface-700));
+  text-align: center;
+}
+
+.logo h3 {
+  margin: 0;
+}
+
+.content-area {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  /* background-color: var(--surface-ground, var(--p-surface-950)); */
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  opacity: 0.6;
+  gap: 1rem;
+}

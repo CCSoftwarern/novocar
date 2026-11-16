@@ -41,7 +41,6 @@
 
     <div class="row row-cols-1 row-cols-md-4 g-4">
         @for (item of carros; track $index) {
-        <!-- Utilização do de @for card dos modelos-->
             <div class="col">
                 <div class="card h-100 shadow-sm">
                   <img src={{item.urlImagem}} class="card-img-top" alt="...">
@@ -50,7 +49,6 @@
                     <p class="card-text">{{item.descricao}}</p>
                     <div class="d-flex justify-content-between">
                       <p class="small"><a href="#!" class="text-muted">carros</a></p>
-                      <!-- aqui eu uso a interpolação uma maneira de formatar moeda e somo esse valor 50000 dá um efeito de desconto -->
                       <p class="small text-danger"><s>{{formatarMoeda(item.preco + 50000)}}</s></p>
                     </div>
 

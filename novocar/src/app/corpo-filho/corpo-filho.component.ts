@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-corpo-filho',
-  standalone: true,
-  imports: [],
-  templateUrl: './corpo-filho.component.html',
-  styleUrl: './corpo-filho.component.css'
+    selector: 'app-corpo-filho',
+    imports: [],
+    templateUrl: './corpo-filho.component.html',
+    styleUrl: './corpo-filho.component.css'
 })
 export class CorpoFilhoComponent {
   

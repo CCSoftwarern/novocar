@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { RouterLink, RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-cabecalho',
-  standalone: true,
-  imports: [RouterModule, RouterLink],
-  templateUrl: './cabecalho.component.html',
-  styleUrl: './cabecalho.component.css'
+    selector: 'app-cabecalho',
+    imports: [RouterModule, RouterLink],
+    templateUrl: './cabecalho.component.html',
+    styleUrl: './cabecalho.component.css'
 })
 export class CabecalhoComponent {
 
