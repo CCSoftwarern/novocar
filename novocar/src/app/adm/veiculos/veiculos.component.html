@@ -1,1 +1,263 @@
-<p>veiculos works!</p>
+<p-toast position="top-right" />
+
+<div class="card">
+  <p-table [value]="carros" [tableStyle]="{ 'min-width': '60rem' }">
+    <ng-template #caption>
+      <div class="flex items-center justify-between">
+        <span class="text-xl font-bold">Carros</span>
+        <div class="flex gap-2">
+          <p-button icon="pi pi-refresh" rounded raised (onClick)="getListaCarros()" />
+          <p-button label="Novo veículo" icon="pi pi-plus" (onClick)="showDialog()" />
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #header>
+      <tr>
+        <th>Id</th>
+        <th>Marca</th>
+        <th>Modelo</th>
+        <th>Ano de fabricação</th>
+        <th>Ano</th>
+        <th>Cor</th>
+        <th>Quilometragem</th>
+        <th>Tipo de combustível</th>
+        <th>Tipo de transmissão</th>
+        <th>Preço</th>
+        <th>Descrição</th>
+        <th>Situação</th>
+        <th>Imagem</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-veiculo>
+      <tr>
+        <td>{{ veiculo.id }}</td>
+        <td>{{ veiculo.marca }}</td>
+        <td>{{ veiculo.modelo }}</td>
+        <td>{{ veiculo.anofabricacao }}</td>
+        <td>{{ veiculo.ano }}</td>
+        <td>{{ veiculo.cor }}</td>
+        <td>{{ veiculo.quilometragem }}</td>
+        <td>{{ veiculo.tipoCombustivel }}</td>
+        <td>{{ veiculo.tipoTransmissao }}</td>
+        <td>{{ veiculo.preco | currency: 'BRL' }}</td>
+        <td>{{ veiculo.descricao }}</td>
+        <td><p-tag [value]="veiculo.situacao" /></td>
+        <td>
+          @if (veiculo.fotografiaPrincipal) {
+              <img [src]="veiculo.fotografiaPrincipal" [alt]="veiculo.modelo" class="thumb-veiculo" />
+          }
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #footer>
+      Um total de {{ carros.length }} carros.
+    </ng-template>
+  </p-table>
+</div>
+
+<!--  Diálogo para cadastrar -->
+<p-dialog
+  [(visible)]="visible"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '64rem', maxWidth: '95vw' }"
+  [contentStyle]="{ 'max-height': '70vh', 'overflow-y': 'auto' }"
+  appendTo="body"
+  header="Cadastrar veículo">
+
+  <form [formGroup]="carroForm">
+
+    <!-- ─────────── IDENTIFICAÇÃO ─────────── -->
+    <section class="form-section">
+      <h3 class="form-section-title">Identificação</h3>
+      <div class="grid p-fluid">
+
+        <div class="col-12 md:col-6 lg:col-4" [class.campo-invalido]="invalido('marca')">
+          <label for="marca" class="form-label">Marca <span class="req">*</span></label>
+          <input pInputText id="marca" formControlName="marca" class="w-full" />
+          @if (invalido('marca')) { <small class="p-error">Informe a marca.</small> }
+        </div>
+
+        <div class="col-12 md:col-6 lg:col-4" [class.campo-invalido]="invalido('modelo')">
+          <label for="modelo" class="form-label">Modelo <span class="req">*</span></label>
+          <input pInputText id="modelo" formControlName="modelo" class="w-full" />
+          @if (invalido('modelo')) { <small class="p-error">Informe o modelo.</small> }
+        </div>
+
+        <div class="col-12 md:col-6 lg:col-4" [class.campo-invalido]="invalido('cor')">
+          <label for="cor" class="form-label">Cor <span class="req">*</span></label>
+          <input pInputText id="cor" formControlName="cor" class="w-full" />
+          @if (invalido('cor')) { <small class="p-error">Informe a cor.</small> }
+        </div>
+
+        <div class="col-12 md:col-6 lg:col-4" [class.campo-invalido]="invalido('anofabricacao')">
+          <label for="anofabricacao" class="form-label">Ano fabricação <span class="req">*</span></label>
+          <p-inputNumber
+            inputId="anofabricacao"
+            formControlName="anofabricacao"
+            [useGrouping]="false"
+            [min]="1900"
+            [max]="2100"
+            placeholder="2020" />
+          @if (invalido('anofabricacao')) { <small class="p-error">Obrigatório.</small> }
+        </div>
+
+        <div class="col-12 md:col-6 lg:col-4" [class.campo-invalido]="invalido('ano')">
+          <label for="ano" class="form-label">Ano modelo <span class="req">*</span></label>
+          <p-inputNumber
+            inputId="ano"
+            formControlName="ano"
+            [useGrouping]="false"
+            [min]="1900"
+            [max]="2100"
+            placeholder="2021" />
+          @if (invalido('ano')) { <small class="p-error">Obrigatório.</small> }
+        </div>
+
+        <div class="col-12 md:col-6 lg:col-4" [class.campo-invalido]="invalido('situacao')">
+          <label for="situacao" class="form-label">Situação <span class="req">*</span></label>
+          <p-select
+            inputId="situacao"
+            formControlName="situacao"
+            [options]="situacoes"
+            optionLabel="label"
+            optionValue="value"
+            appendTo="body" />
+          @if (invalido('situacao')) { <small class="p-error">Selecione a situação.</small> }
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─────────── ESPECIFICAÇÕES ─────────── -->
+    <section class="form-section">
+      <h3 class="form-section-title">Especificações</h3>
+      <div class="grid p-fluid">
+
+        <div class="col-12 md:col-6 lg:col-4" [class.campo-invalido]="invalido('tipoCombustivel')">
+          <label for="tipoCombustivel" class="form-label">Combustível <span class="req">*</span></label>
+          <p-select
+            inputId="tipoCombustivel"
+            formControlName="tipoCombustivel"
+            [options]="combustiveis"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Selecione"
+            appendTo="body"
+            [showClear]="true" />
+          @if (invalido('tipoCombustivel')) { <small class="p-error">Selecione o combustível.</small> }
+        </div>
+
+        <div class="col-12 md:col-6 lg:col-4" [class.campo-invalido]="invalido('tipoTransmissao')">
+          <label for="tipoTransmissao" class="form-label">Transmissão <span class="req">*</span></label>
+          <p-select
+            inputId="tipoTransmissao"
+            formControlName="tipoTransmissao"
+            [options]="transmissoes"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Selecione"
+            appendTo="body"
+            [showClear]="true" />
+          @if (invalido('tipoTransmissao')) { <small class="p-error">Selecione a transmissão.</small> }
+        </div>
+
+        <div class="col-12 md:col-6 lg:col-4" [class.campo-invalido]="invalido('quilometragem')">
+          <label for="quilometragem" class="form-label">Quilometragem <span class="req">*</span></label>
+          <p-inputNumber
+            inputId="quilometragem"
+            formControlName="quilometragem"
+            [min]="0"
+            [maxFractionDigits]="0"
+            suffix=" km" />
+          @if (invalido('quilometragem')) { <small class="p-error">Obrigatório.</small> }
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─────────── COMERCIAL ─────────── -->
+    <section class="form-section">
+      <h3 class="form-section-title">Comercial</h3>
+      <div class="grid p-fluid">
+
+        <div class="col-12 md:col-6 lg:col-4" [class.campo-invalido]="invalido('preco')">
+          <label for="preco" class="form-label">Preço <span class="req">*</span></label>
+          <p-inputNumber
+            inputId="preco"
+            formControlName="preco"
+            mode="currency"
+            currency="BRL"
+            locale="pt-BR" />
+          @if (invalido('preco')) { <small class="p-error">Informe o preço.</small> }
+        </div>
+
+        <div class="col-12 md:col-6 lg:col-8">
+          <label for="descricao" class="form-label">Descrição</label>
+          <textarea
+            pTextarea
+            id="descricao"
+            formControlName="descricao"
+            rows="3"
+            class="w-full"></textarea>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─────────── FOTO ─────────── -->
+    <section class="form-section">
+      <h3 class="form-section-title">Foto do veículo</h3>
+      <div class="grid p-fluid">
+
+        <div class="col-12 md:col-5 flex flex-column gap-2">
+          <p-fileUpload
+            mode="basic"
+            chooseLabel="Escolher imagem"
+            chooseIcon="pi pi-upload"
+            accept="image/*"
+            [maxFileSize]="5000000"
+            [auto]="false"
+            (onSelect)="onArquivoSelecionado($event)" />
+          <small class="text-color-secondary">JPG ou PNG, até 5 MB.</small>
+        </div>
+
+        <div class="col-12 md:col-7">
+          <div class="preview-box">
+            @if (previewUrl) {
+              <img [src]="previewUrl" class="preview-veiculo" alt="Prévia do veículo" />
+            } @else {
+              <span class="preview-vazio"><i class="pi pi-image mr-2"></i>Nenhuma imagem selecionada</span>
+            }
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </form>
+
+  <ng-template #footer>
+    <div class="dialog-footer">
+      <span class="text-sm text-color-secondary"><span class="req">*</span> Campos obrigatórios</span>
+      <div class="flex gap-2">
+        <p-button
+          label="Cancelar"
+          severity="secondary"
+          [text]="true"
+          [disabled]="salvando"
+          (onClick)="visible = false" />
+        <p-button
+          label="Salvar"
+          icon="pi pi-check"
+          [loading]="salvando"
+          [disabled]="carroForm.invalid"
+          (onClick)="salvar()" />
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>

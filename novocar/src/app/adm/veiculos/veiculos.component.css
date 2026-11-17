@@ -1,0 +1,93 @@
+.thumb-veiculo {
+  width: 6rem;        /* 96px */
+  height: 4rem;       /* 64px */
+  object-fit: cover;  /* recorta sem distorcer */
+  border-radius: 0.5rem;
+  display: block;
+}
+.preview-veiculo {
+  max-width: 100%;
+  max-height: 10rem;
+  object-fit: contain;
+  border-radius: 0.5rem;
+  border: 1px solid var(--p-content-border-color, #e5e7eb);
+  display: block;
+}
+
+/* ── Seções do formulário ───────────────────────────── */
+.form-section {
+  padding: 1.25rem 0;
+  border-top: 1px solid var(--p-content-border-color, #e5e7eb);
+}
+.form-section:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.form-section-title {
+  margin: 0 0 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--p-text-muted-color, #6b7280);
+}
+
+/* ── Labels e mensagens ─────────────────────────────── */
+.form-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--p-text-color, #1f2937);
+}
+.req {
+  color: var(--p-red-500, #ef4444);
+}
+.p-error {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  color: var(--p-red-500, #ef4444);
+}
+
+/* ── Largura dos componentes PrimeNG (substitui o p-fluid) ── */
+:host ::ng-deep .form-section .p-inputtext,
+:host ::ng-deep .form-section .p-textarea,
+:host ::ng-deep .form-section .p-select,
+:host ::ng-deep .form-section .p-inputnumber {
+  width: 100%;
+}
+
+/* ── Borda vermelha em campo inválido ───────────────── */
+:host ::ng-deep .campo-invalido .p-inputtext,
+:host ::ng-deep .campo-invalido .p-select,
+:host ::ng-deep .campo-invalido .p-inputnumber-input,
+:host ::ng-deep .campo-invalido .p-textarea {
+  border-color: var(--p-red-500, #ef4444);
+}
+
+/* ── Rodapé do diálogo ──────────────────────────────── */
+.dialog-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+}
+
+/* ── Área da foto ───────────────────────────────────── */
+.preview-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 9rem;
+  padding: 0.75rem;
+  border: 1px dashed var(--p-content-border-color, #d1d5db);
+  border-radius: 0.5rem;
+}
+.preview-vazio {
+  font-size: 0.875rem;
+  color: var(--p-text-muted-color, #9ca3af);
+}

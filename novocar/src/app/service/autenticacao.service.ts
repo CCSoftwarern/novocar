@@ -1,21 +1,14 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AutenticacaoService {
+  private http = inject(HttpClient);
+  private apiUrl = `${environment.apiUrl}/auth/login`;
 
-  constructor(private http: HttpClient) { }
-  private apiUrl = `${environment.apiUrl}/auth/login`; // Substitua pela URL da sua API
-
-  login(nome: string, senha: string): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    const body = { nome, senha };
-
-    return this.http.post(this.apiUrl, body, { headers });
+  login(nome: string, senha: string): Observable<{ token: string; perfil: string }> {
+    return this.http.post<{ token: string; perfil: string }>(this.apiUrl, { nome, senha });
   }
 }

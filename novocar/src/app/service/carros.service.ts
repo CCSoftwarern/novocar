@@ -1,25 +1,30 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { Carro } from '../interfaces/carro';
 
-@Injectable({
-  providedIn: 'root'
-})
+export interface UploadResponse {
+  url: string; // ex.: http://localhost:8080/uploads/abc123.jpg
+}
+
+@Injectable({ providedIn: 'root' })
 export class CarrosService {
+  private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/carro`;
 
-  constructor(private http: HttpClient ) { }
-
-  // para listar todos os carros cadastrados
-  getCarros(): Observable<any> {
-    return this.http.get(this.apiUrl+'/listarCarros').pipe(
-      map((response: any) => response),
-      catchError((error: any) => {
-        console.error('Erro ao obter carros:', error);
-        throw error;
-      })
-    );
+  getCarros(): Observable<Carro[]> {
+    return this.http.get<Carro[]>(`${this.apiUrl}/listarCarros`);
   }
+
+  postCarro(carro: Omit<Carro, 'id'>): Observable<Carro> {
+    return this.http.post<Carro>(`${this.apiUrl}/salvar`, carro);
+  }
+uploadImagem(arquivo: File): Observable<string> {
+  const formData = new FormData();
+  formData.append('arquivo', arquivo, arquivo.name);
+
+  // responseType 'text' evita o JSON.parse
+  return this.http.post(`${this.apiUrl}/upload`, formData, { responseType: 'text' });
+}
 }
