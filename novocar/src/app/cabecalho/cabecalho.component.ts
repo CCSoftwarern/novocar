@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterModule } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-cabecalho',
@@ -8,7 +8,10 @@ import { RouterLink, RouterModule } from '@angular/router';
     styleUrl: './cabecalho.component.css'
 })
 export class CabecalhoComponent {
+  private router = inject(Router);
 
+  // lido ao criar o componente (a home é recriada a cada navegação para "/")
+  logado = !!localStorage.getItem('token');
 
   // items do menu Navibar
   itemsMenu = [
@@ -22,7 +25,10 @@ export class CabecalhoComponent {
   rolarPara(section: string)
   { document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' }); }
 
-
-
-
+  sair(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('perfil');
+    this.logado = false;
+    this.router.navigate(['/login']);
+  }
 }

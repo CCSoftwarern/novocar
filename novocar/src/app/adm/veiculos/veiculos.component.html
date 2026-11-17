@@ -1,64 +1,147 @@
 <p-toast position="top-right" />
+<p-confirmDialog />
 
 <div class="card">
-  <p-table [value]="carros" [tableStyle]="{ 'min-width': '60rem' }">
+  <p-table
+    #tabela
+    [value]="carros"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [globalFilterFields]="['marca', 'modelo', 'cor', 'situacao', 'tipoCombustivel']"
+    [tableStyle]="{ 'min-width': '62rem' }"
+    rowHover
+    stripedRows>
+
     <ng-template #caption>
-      <div class="flex items-center justify-between">
-        <span class="text-xl font-bold">Carros</span>
-        <div class="flex gap-2">
-          <p-button icon="pi pi-refresh" rounded raised (onClick)="getListaCarros()" />
-          <p-button label="Novo veículo" icon="pi pi-plus" (onClick)="showDialog()" />
+      <div class="table-header">
+        <div class="table-title">
+          <i class="pi pi-car" aria-hidden="true"></i>
+          <div>
+            <span class="title">Veículos</span>
+            <span class="subtitle">{{ carros.length }} cadastrado(s)</span>
+          </div>
+        </div>
+
+        <div class="table-actions">
+          <input
+            pInputText
+            type="text"
+            class="search-input"
+            placeholder="Buscar por marca, modelo, cor..."
+            (input)="tabela.filterGlobal($any($event.target).value, 'contains')" />
+
+          <p-button
+            icon="pi pi-refresh"
+            [text]="true"
+            [rounded]="true"
+            pTooltip="Atualizar lista"
+            tooltipPosition="top"
+            (onClick)="getListaCarros()" />
+
+          @if (isAdmin) {
+            <p-button
+              label="Novo veículo"
+              icon="pi pi-plus"
+              (onClick)="showDialog()" />
+          }
         </div>
       </div>
     </ng-template>
 
     <ng-template #header>
       <tr>
-        <th>Id</th>
-        <th>Marca</th>
-        <th>Modelo</th>
-        <th>Ano de fabricação</th>
-        <th>Ano</th>
-        <th>Cor</th>
-        <th>Quilometragem</th>
-        <th>Tipo de combustível</th>
-        <th>Tipo de transmissão</th>
-        <th>Preço</th>
-        <th>Descrição</th>
-        <th>Situação</th>
-        <th>Imagem</th>
+        <th>Veículo</th>
+        <th style="width: 7rem">Ano</th>
+        <th style="width: 8rem">Cor</th>
+        <th style="width: 8rem">KM</th>
+        <th>Combustível</th>
+        <th>Câmbio</th>
+        <th style="width: 9rem">Preço</th>
+        <th style="width: 9rem">Situação</th>
+        @if (isAdmin) {
+          <th style="width: 7rem">Ações</th>
+        }
       </tr>
     </ng-template>
 
     <ng-template #body let-veiculo>
-      <tr>
-        <td>{{ veiculo.id }}</td>
-        <td>{{ veiculo.marca }}</td>
-        <td>{{ veiculo.modelo }}</td>
-        <td>{{ veiculo.anofabricacao }}</td>
-        <td>{{ veiculo.ano }}</td>
+      <tr
+        class="linha-clicavel"
+        tabindex="0"
+        (click)="abrirDetalhes(veiculo)"
+        (keydown.enter)="abrirDetalhes(veiculo)">
+        <td>
+          <div
+            class="veiculo-cell"
+            [pTooltip]="veiculo.descricao || ''"
+            [tooltipDisabled]="!veiculo.descricao"
+            tooltipPosition="top">
+            @if (veiculo.fotografiaPrincipal) {
+              <img [src]="veiculo.fotografiaPrincipal" [alt]="veiculo.modelo" class="thumb-veiculo" />
+            } @else {
+              <div class="thumb-vazia"><i class="pi pi-image" aria-hidden="true"></i></div>
+            }
+            <div class="veiculo-info">
+              <span class="veiculo-modelo">{{ veiculo.marca }} {{ veiculo.modelo }}</span>
+              <span class="veiculo-detalhe">Cód. {{ veiculo.id }}</span>
+            </div>
+          </div>
+        </td>
+        <td>{{ veiculo.anofabricacao }}/{{ veiculo.ano }}</td>
         <td>{{ veiculo.cor }}</td>
-        <td>{{ veiculo.quilometragem }}</td>
+        <td>{{ veiculo.quilometragem | number: '1.0-0' }} km</td>
         <td>{{ veiculo.tipoCombustivel }}</td>
         <td>{{ veiculo.tipoTransmissao }}</td>
-        <td>{{ veiculo.preco | currency: 'BRL' }}</td>
-        <td>{{ veiculo.descricao }}</td>
-        <td><p-tag [value]="veiculo.situacao" /></td>
+        <td class="preco-cell">{{ veiculo.preco | currency: 'BRL' }}</td>
         <td>
-          @if (veiculo.fotografiaPrincipal) {
-              <img [src]="veiculo.fotografiaPrincipal" [alt]="veiculo.modelo" class="thumb-veiculo" />
-          }
+          <p-tag
+            [value]="rotuloSituacao(veiculo.situacao)"
+            [severity]="severidadeSituacao(veiculo.situacao)" />
+        </td>
+        @if (isAdmin) {
+          <td (click)="$event.stopPropagation()">
+            <div class="acoes">
+              <p-button
+                icon="pi pi-pencil"
+                severity="secondary"
+                [text]="true"
+                [rounded]="true"
+                pTooltip="Editar"
+                tooltipPosition="top"
+                (onClick)="showDialog(veiculo)" />
+              <p-button
+                icon="pi pi-trash"
+                severity="danger"
+                [text]="true"
+                [rounded]="true"
+                pTooltip="Excluir"
+                tooltipPosition="top"
+                (onClick)="excluir(veiculo)" />
+            </div>
+          </td>
+        }
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td [attr.colspan]="isAdmin ? 9 : 8">
+          <div class="empty-table">
+            <i class="pi pi-inbox" aria-hidden="true"></i>
+            <span>Nenhum veículo encontrado.</span>
+          </div>
         </td>
       </tr>
     </ng-template>
 
     <ng-template #footer>
-      Um total de {{ carros.length }} carros.
+      <span class="text-sm text-color-secondary">Total: {{ carros.length }} veículo(s)</span>
     </ng-template>
   </p-table>
 </div>
 
-<!--  Diálogo para cadastrar -->
+<!--  Diálogo para cadastrar / editar -->
 <p-dialog
   [(visible)]="visible"
   [modal]="true"
@@ -67,14 +150,14 @@
   [style]="{ width: '64rem', maxWidth: '95vw' }"
   [contentStyle]="{ 'max-height': '70vh', 'overflow-y': 'auto' }"
   appendTo="body"
-  header="Cadastrar veículo">
+  [header]="editando ? 'Editar veículo' : 'Cadastrar veículo'">
 
   <form [formGroup]="carroForm">
 
     <!-- ─────────── IDENTIFICAÇÃO ─────────── -->
     <section class="form-section">
       <h3 class="form-section-title">Identificação</h3>
-      <div class="grid p-fluid">
+      <div class="grid">
 
         <div class="col-12 md:col-6 lg:col-4" [class.campo-invalido]="invalido('marca')">
           <label for="marca" class="form-label">Marca <span class="req">*</span></label>
@@ -99,6 +182,7 @@
           <p-inputNumber
             inputId="anofabricacao"
             formControlName="anofabricacao"
+            [fluid]="true"
             [useGrouping]="false"
             [min]="1900"
             [max]="2100"
@@ -111,6 +195,7 @@
           <p-inputNumber
             inputId="ano"
             formControlName="ano"
+            [fluid]="true"
             [useGrouping]="false"
             [min]="1900"
             [max]="2100"
@@ -123,6 +208,7 @@
           <p-select
             inputId="situacao"
             formControlName="situacao"
+            [fluid]="true"
             [options]="situacoes"
             optionLabel="label"
             optionValue="value"
@@ -136,13 +222,14 @@
     <!-- ─────────── ESPECIFICAÇÕES ─────────── -->
     <section class="form-section">
       <h3 class="form-section-title">Especificações</h3>
-      <div class="grid p-fluid">
+      <div class="grid">
 
         <div class="col-12 md:col-6 lg:col-4" [class.campo-invalido]="invalido('tipoCombustivel')">
           <label for="tipoCombustivel" class="form-label">Combustível <span class="req">*</span></label>
           <p-select
             inputId="tipoCombustivel"
             formControlName="tipoCombustivel"
+            [fluid]="true"
             [options]="combustiveis"
             optionLabel="label"
             optionValue="value"
@@ -157,6 +244,7 @@
           <p-select
             inputId="tipoTransmissao"
             formControlName="tipoTransmissao"
+            [fluid]="true"
             [options]="transmissoes"
             optionLabel="label"
             optionValue="value"
@@ -171,6 +259,7 @@
           <p-inputNumber
             inputId="quilometragem"
             formControlName="quilometragem"
+            [fluid]="true"
             [min]="0"
             [maxFractionDigits]="0"
             suffix=" km" />
@@ -183,13 +272,14 @@
     <!-- ─────────── COMERCIAL ─────────── -->
     <section class="form-section">
       <h3 class="form-section-title">Comercial</h3>
-      <div class="grid p-fluid">
+      <div class="grid">
 
         <div class="col-12 md:col-6 lg:col-4" [class.campo-invalido]="invalido('preco')">
           <label for="preco" class="form-label">Preço <span class="req">*</span></label>
           <p-inputNumber
             inputId="preco"
             formControlName="preco"
+            [fluid]="true"
             mode="currency"
             currency="BRL"
             locale="pt-BR" />
@@ -212,18 +302,30 @@
     <!-- ─────────── FOTO ─────────── -->
     <section class="form-section">
       <h3 class="form-section-title">Foto do veículo</h3>
-      <div class="grid p-fluid">
+      <div class="grid">
 
         <div class="col-12 md:col-5 flex flex-column gap-2">
           <p-fileUpload
+            #uploader
             mode="basic"
             chooseLabel="Escolher imagem"
             chooseIcon="pi pi-upload"
             accept="image/*"
             [maxFileSize]="5000000"
             [auto]="false"
+            [disabled]="salvando"
             (onSelect)="onArquivoSelecionado($event)" />
           <small class="text-color-secondary">JPG ou PNG, até 5 MB.</small>
+
+          @if (arquivoSelecionado || previewUrl) {
+            <p-button
+              label="Remover imagem"
+              icon="pi pi-times"
+              severity="danger"
+              [text]="true"
+              size="small"
+              (onClick)="removerArquivo()" />
+          }
         </div>
 
         <div class="col-12 md:col-7">
@@ -231,7 +333,9 @@
             @if (previewUrl) {
               <img [src]="previewUrl" class="preview-veiculo" alt="Prévia do veículo" />
             } @else {
-              <span class="preview-vazio"><i class="pi pi-image mr-2"></i>Nenhuma imagem selecionada</span>
+              <span class="preview-vazio">
+                <i class="pi pi-image mr-2" aria-hidden="true"></i>Nenhuma imagem selecionada
+              </span>
             }
           </div>
         </div>
@@ -252,12 +356,104 @@
           [disabled]="salvando"
           (onClick)="visible = false" />
         <p-button
-          label="Salvar"
+          [label]="editando ? 'Salvar alterações' : 'Salvar'"
           icon="pi pi-check"
           [loading]="salvando"
           [disabled]="carroForm.invalid"
           (onClick)="salvar()" />
       </div>
     </div>
+  </ng-template>
+</p-dialog>
+
+<!--  Diálogo de detalhes (somente leitura) -->
+<p-dialog
+  [(visible)]="visibleDetalhes"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '52rem', maxWidth: '95vw' }"
+  appendTo="body"
+  [header]="detalhes ? detalhes.marca + ' ' + detalhes.modelo : 'Detalhes do veículo'">
+
+  @if (detalhes) {
+    <div class="detalhes">
+
+      <div class="detalhes-foto">
+        @if (detalhes.fotografiaPrincipal) {
+          <img [src]="detalhes.fotografiaPrincipal" [alt]="detalhes.modelo" />
+        } @else {
+          <div class="detalhes-sem-foto">
+            <i class="pi pi-image" aria-hidden="true"></i>
+            <span>Sem foto cadastrada</span>
+          </div>
+        }
+      </div>
+
+      <div class="detalhes-info">
+
+        <div class="detalhes-topo">
+          <div>
+            <h2 class="detalhes-nome">{{ detalhes.marca }} {{ detalhes.modelo }}</h2>
+            <span class="detalhes-codigo">Código #{{ detalhes.id }}</span>
+          </div>
+          <p-tag
+            [value]="rotuloSituacao(detalhes.situacao)"
+            [severity]="severidadeSituacao(detalhes.situacao)" />
+        </div>
+
+        <div class="detalhes-preco">{{ detalhes.preco | currency: 'BRL' }}</div>
+
+        <dl class="detalhes-grid">
+          <div>
+            <dt>Ano</dt>
+            <dd>{{ detalhes.anofabricacao }}/{{ detalhes.ano }}</dd>
+          </div>
+          <div>
+            <dt>Cor</dt>
+            <dd>{{ detalhes.cor }}</dd>
+          </div>
+          <div>
+            <dt>Quilometragem</dt>
+            <dd>{{ detalhes.quilometragem | number: '1.0-0' }} km</dd>
+          </div>
+          <div>
+            <dt>Combustível</dt>
+            <dd>{{ detalhes.tipoCombustivel }}</dd>
+          </div>
+          <div>
+            <dt>Câmbio</dt>
+            <dd>{{ detalhes.tipoTransmissao }}</dd>
+          </div>
+          <div>
+            <dt>Situação</dt>
+            <dd>{{ rotuloSituacao(detalhes.situacao) }}</dd>
+          </div>
+        </dl>
+
+        @if (detalhes.descricao) {
+          <div class="detalhes-descricao">
+            <h3>Descrição</h3>
+            <p>{{ detalhes.descricao }}</p>
+          </div>
+        }
+
+      </div>
+    </div>
+  }
+
+  <ng-template #footer>
+    <p-button
+      label="Fechar"
+      severity="secondary"
+      [text]="true"
+      (onClick)="visibleDetalhes = false" />
+
+    @if (isAdmin) {
+      <p-button
+        label="Editar veículo"
+        icon="pi pi-pencil"
+        (onClick)="editarDoDetalhe()" />
+    }
   </ng-template>
 </p-dialog>

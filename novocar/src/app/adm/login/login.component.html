@@ -4,50 +4,149 @@
     <!-- Marca -->
     <div class="text-center mb-4">
       <i class="bi bi-car-front-fill brand-icon" aria-hidden="true"></i>
-      <h1 class="h3 fw-bold mt-2 mb-1">Bem-vindo!</h1>
-      <p class="text-muted mb-0">Entre com suas credenciais</p>
+      @if (modo === 'login') {
+        <h1 class="h3 fw-bold mt-2 mb-1">Bem-vindo!</h1>
+        <p class="text-muted mb-0">Entre com suas credenciais</p>
+      } @else {
+        <h1 class="h3 fw-bold mt-2 mb-1">Criar conta</h1>
+        <p class="text-muted mb-0">Cadastre-se para acessar</p>
+      }
     </div>
 
-    <form [formGroup]="loginForm" (ngSubmit)="entrar()" novalidate>
-
-      <div class="mb-3">
-        <label for="usuario" class="form-label fw-semibold">Usuário</label>
-        <input
-          id="usuario"
-          type="text"
-          class="form-control"
-          formControlName="nome"
-          placeholder="Digite seu usuário"
-          autocomplete="username"
-        />
-        @if (loginForm.get('nome')?.invalid && loginForm.get('nome')?.touched) {
-          <div class="text-danger small mt-1">Informe o nome de usuário.</div>
-        }
+    <!-- Feedback -->
+    @if (mensagem) {
+      <div
+        class="alert py-2 small"
+        [class.alert-success]="mensagem.tipo === 'sucesso'"
+        [class.alert-danger]="mensagem.tipo === 'erro'"
+        role="alert">
+        {{ mensagem.texto }}
       </div>
+    }
 
-      <div class="mb-4">
-        <label for="senha" class="form-label fw-semibold">Senha</label>
-        <input
-          id="senha"
-          type="password"
-          class="form-control"
-          formControlName="senha"
-          placeholder="Digite sua senha"
-          autocomplete="current-password"
-        />
-        @if (loginForm.get('senha')?.invalid && loginForm.get('senha')?.touched) {
-          <div class="text-danger small mt-1">Informe a senha.</div>
-        }
+    <!-- ─────────── LOGIN ─────────── -->
+    @if (modo === 'login') {
+      <form [formGroup]="loginForm" (ngSubmit)="entrar()" novalidate>
+
+        <div class="mb-3">
+          <label for="usuario" class="form-label fw-semibold">Usuário</label>
+          <input
+            id="usuario"
+            type="text"
+            class="form-control"
+            formControlName="nome"
+            placeholder="Digite seu usuário"
+            autocomplete="username"
+          />
+          @if (loginForm.get('nome')?.invalid && loginForm.get('nome')?.touched) {
+            <div class="text-danger small mt-1">Informe o nome de usuário.</div>
+          }
+        </div>
+
+        <div class="mb-4">
+          <label for="senha" class="form-label fw-semibold">Senha</label>
+          <input
+            id="senha"
+            type="password"
+            class="form-control"
+            formControlName="senha"
+            placeholder="Digite sua senha"
+            autocomplete="current-password"
+          />
+          @if (loginForm.get('senha')?.invalid && loginForm.get('senha')?.touched) {
+            <div class="text-danger small mt-1">Informe a senha.</div>
+          }
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-login w-100 fw-semibold"
+          [disabled]="loginForm.invalid || enviando">
+          {{ enviando ? 'Entrando...' : 'Entrar' }}
+        </button>
+
+      </form>
+
+      <div class="text-center mt-4">
+        <a href="#" class="link-secondary small">Esqueceu sua senha?</a>
       </div>
+    }
 
-      <button type="submit" class="btn btn-login w-100 fw-semibold" [disabled]="loginForm.invalid">
-        Entrar
-      </button>
+    @else {
+      <!-- ─────────── CADASTRO ─────────── -->
+      <form [formGroup]="cadastroForm" (ngSubmit)="cadastrar()" novalidate>
 
-    </form>
+        <div class="mb-3">
+          <label for="novoUsuario" class="form-label fw-semibold">Usuário</label>
+          <input
+            id="novoUsuario"
+            type="text"
+            class="form-control"
+            formControlName="nome"
+            placeholder="Escolha um nome de usuário"
+            autocomplete="username"
+          />
+          @if (cadastroForm.get('nome')?.invalid && cadastroForm.get('nome')?.touched) {
+            <div class="text-danger small mt-1">Informe o nome de usuário.</div>
+          }
+        </div>
 
-    <div class="text-center mt-4">
-      <a href="#" class="link-secondary small">Esqueceu sua senha?</a>
+        <div class="mb-3">
+          <label for="novaSenha" class="form-label fw-semibold">Senha</label>
+          <input
+            id="novaSenha"
+            type="password"
+            class="form-control"
+            formControlName="senha"
+            placeholder="Mínimo de 6 caracteres"
+            autocomplete="new-password"
+          />
+          @if (cadastroForm.get('senha')?.touched && cadastroForm.get('senha')?.hasError('required')) {
+            <div class="text-danger small mt-1">Informe a senha.</div>
+          }
+          @if (cadastroForm.get('senha')?.touched && cadastroForm.get('senha')?.hasError('minlength')) {
+            <div class="text-danger small mt-1">A senha deve ter no mínimo 6 caracteres.</div>
+          }
+        </div>
+
+        <div class="mb-4">
+          <label for="confirmarSenha" class="form-label fw-semibold">Confirmar senha</label>
+          <input
+            id="confirmarSenha"
+            type="password"
+            class="form-control"
+            formControlName="confirmarSenha"
+            placeholder="Repita a senha"
+            autocomplete="new-password"
+          />
+          @if (cadastroForm.get('confirmarSenha')?.touched && cadastroForm.get('confirmarSenha')?.hasError('required')) {
+            <div class="text-danger small mt-1">Confirme a senha.</div>
+          }
+          @if (senhasDiferentes) {
+            <div class="text-danger small mt-1">As senhas não coincidem.</div>
+          }
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-login w-100 fw-semibold"
+          [disabled]="cadastroForm.invalid || enviando">
+          {{ enviando ? 'Criando conta...' : 'Criar conta' }}
+        </button>
+
+      </form>
+    }
+
+    <!-- Alternar entre os dois formulários -->
+    <div class="text-center mt-3">
+      @if (modo === 'login') {
+        <span class="text-muted small">Não tem conta?</span>
+        <a href="#" class="link-secondary small fw-semibold ms-1"
+           (click)="alternarModo(); $event.preventDefault()">Criar conta</a>
+      } @else {
+        <a href="#" class="link-secondary small fw-semibold"
+           (click)="alternarModo(); $event.preventDefault()">Já tenho conta</a>
+      }
     </div>
 
     <div class="text-center mt-2">

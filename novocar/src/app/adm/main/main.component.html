@@ -6,6 +6,26 @@
       <h3>NovoCar</h3>
     </div>
     <p-panelMenu [model]="itensMenu" [style]="{ width: '100%' }"></p-panelMenu>
+
+    <div class="sidebar-footer">
+      <div class="perfil-info">
+        <i class="pi" [class.pi-shield]="isAdmin" [class.pi-user]="!isAdmin" aria-hidden="true"></i>
+        <div class="perfil-texto">
+          <span class="perfil-rotulo">{{ isAdmin ? 'Administrador' : 'Cliente' }}</span>
+          <span class="perfil-descricao">
+            {{ isAdmin ? 'Acesso total' : 'Agendamento de test drive' }}
+          </span>
+        </div>
+      </div>
+
+      <p-button
+        label="Sair"
+        icon="pi pi-sign-out"
+        severity="secondary"
+        [text]="true"
+        styleClass="w-full"
+        (onClick)="sair()" />
+    </div>
   </aside>
 
   <!-- Área de Conteúdo com Abas -->

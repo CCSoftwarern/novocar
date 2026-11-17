@@ -27,4 +27,14 @@ uploadImagem(arquivo: File): Observable<string> {
   // responseType 'text' evita o JSON.parse
   return this.http.post(`${this.apiUrl}/upload`, formData, { responseType: 'text' });
 }
+
+  // remove um carro pelo id (backend responde 204 No Content)
+  deleteCarro(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  // atualiza um carro existente
+  putCarro(id: number, carro: Omit<Carro, 'id'>): Observable<Carro> {
+    return this.http.put<Carro>(`${this.apiUrl}/${id}`, carro);
+  }
 }

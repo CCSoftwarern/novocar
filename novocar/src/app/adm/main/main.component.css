@@ -12,6 +12,48 @@
   border-right: 1px solid var(--surface-border, var(--p-surface-700));
   padding: 1rem;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--surface-border, var(--p-surface-700));
+}
+
+.perfil-info {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.5rem;
+  background: var(--p-content-hover-background, rgba(0, 0, 0, 0.04));
+}
+
+.perfil-info > .pi {
+  font-size: 1.1rem;
+}
+
+.perfil-texto {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.perfil-rotulo {
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.perfil-descricao {
+  font-size: 0.7rem;
+  color: var(--p-text-muted-color, #6b7280);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .logo {

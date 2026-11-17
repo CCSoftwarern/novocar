@@ -43,15 +43,28 @@
           }
         </ul>
 
-        <!-- Login -->
-        <a
-          class="iconeLogin d-flex align-items-center gap-2"
-          routerLink="/login"
-          routerLinkActive="active"
-        >
-          <i class="bi bi-person-circle" aria-hidden="true"></i>
-          <span>Login</span>
-        </a>
+        <!-- Login / Sair -->
+        @if (logado) {
+          <a
+            class="iconeLogin d-flex align-items-center gap-2 cursor"
+            role="button"
+            tabindex="0"
+            (click)="sair()"
+            (keydown.enter)="sair()"
+          >
+            <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+            <span>Sair</span>
+          </a>
+        } @else {
+          <a
+            class="iconeLogin d-flex align-items-center gap-2"
+            routerLink="/login"
+            routerLinkActive="active"
+          >
+            <i class="bi bi-person-circle" aria-hidden="true"></i>
+            <span>Login</span>
+          </a>
+        }
 
       </div>
     </div>
