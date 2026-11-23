@@ -17,6 +17,11 @@ export class CarrosService {
     return this.http.get<Carro[]>(`${this.apiUrl}/listarCarros`);
   }
 
+  // busca um veículo pelo id (página de detalhe)
+  getCarro(id: number): Observable<Carro> {
+    return this.http.get<Carro>(`${this.apiUrl}/${id}`);
+  }
+
   postCarro(carro: Omit<Carro, 'id'>): Observable<Carro> {
     return this.http.post<Carro>(`${this.apiUrl}/salvar`, carro);
   }

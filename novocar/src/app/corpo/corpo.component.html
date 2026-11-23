@@ -1,191 +1,326 @@
+<h1 class="visually-hidden">NovoCar — concessionária de veículos novos e seminovos</h1>
 
+<!-- ═══════════════════════ HERO / CARROSSEL ═══════════════════════ -->
+<section id="carosel" class="hero">
+  <div
+    id="carouselNovoCar"
+    class="carousel slide carousel-fade"
+    data-bs-ride="carousel"
+    data-bs-interval="6000">
 
-
-<!-- Carrossel -->
-
-<div id="carosel">
-
-    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-          @for (item of imagensCarrocell; track $index) {
-             <!-- Property Binding usado para carregar a classe do item carrosel, devido ao tipo ativo-->
-            <div [class]="item.classe" data-bs-interval=item.tempo>
-                <!-- Property Binding -->
-                <img [src]="item.imagem" class="d-block w-100" alt="...">
-                <div class="carousel-caption-left carousel-caption d-none d-md-block">
-                    <h1>{{item.titulo}}</h1>
-                    <p class="p1">{{ item.paragrafo }}</p>
-                    <button type="button" class="btn btn-warning btn-lg">Ver mais</button>
-                </div>
-              </div>
-          }
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Anterior</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Proxímo</span>
-        </button>
-      </div>
-
-</div>
-
-
-  <!-- Cards -->
-
-
-  <div id ="Modelos" class="container mt-5">
-    <h2><i class="bi bi-car-front-fill"></i> Modelos</h2>
-
-
-    <div class="row row-cols-1 row-cols-md-4 g-4">
-        @for (item of carros; track $index) {
-            <div class="col">
-                <div class="card h-100 shadow-sm">
-                  <img src={{item.urlImagem}} class="card-img-top" alt="...">
-                  <div class="card-body">
-                    <h5 class="card-title">{{item.modelo}}</h5>
-                    <p class="card-text">{{item.descricao}}</p>
-                    <div class="d-flex justify-content-between">
-                      <p class="small"><a href="#!" class="text-muted">carros</a></p>
-                      <p class="small text-danger"><s>{{formatarMoeda(item.preco + 50000)}}</s></p>
-                    </div>
-
-                    <div class="d-flex justify-content-between mb-3">
-                      <h5 class="mb-0">{{item.titulo}}</h5>
-                      <h5 class="text-dark mb-0">{{formatarMoeda(item.preco)}}</h5>
-                    </div>
-                    @if (item.situacao === 0) {
-
-                      <button type="button" class="btn botoes-card btn-lg" disabled data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="verConfirmar()">
-                        Indisponível
-                      </button>
-
-                    } @else {
-
-                      <button type="button" class="btn botoes-card btn-lg" data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="verConfirmar()">
-                        Eu quero
-                      </button>
-                    }
-
-                  </div>
-                </div>
-
-              </div>
-
-        }
-
-
-
+    <div class="carousel-indicators">
+      @for (item of imagensCarrocell; track $index) {
+        <button
+          type="button"
+          data-bs-target="#carouselNovoCar"
+          [attr.data-bs-slide-to]="$index"
+          [class.active]="$index === 0"
+          [attr.aria-label]="'Ir para o slide ' + ($index + 1)"></button>
+      }
     </div>
 
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
-      <button class="btn btn-light me-md-2" type="button" (click)="rolarPara('carosel')">Voltar ao topo</button>
-    </div>
+    <div class="carousel-inner">
+      @for (item of imagensCarrocell; track $index) {
+        <div [class]="item.classe">
+          <img [src]="item.imagem" class="hero-imagem"
+          [alt]="item.titulo" />
+          <div class="hero-overlay"></div>
 
-    <!-- Usando imput -->
+          <div class="carousel-caption hero-legenda text-start">
+            <span class="hero-etiqueta">NovoCar</span>
+            <h2 class="hero-titulo">{{ item.titulo }}</h2>
+            <p class="hero-texto">{{ item.paragrafo }}</p>
 
-    <app-corpo-filho
-    [titulo1]="'Feliz natal é na NovoCar'" (acaoAlerta)="evento()"
-    [detalhes]="'Preços imperdíveis, condições de pagamento melhores ainda!'">
-   </app-corpo-filho>
-
-  </div>
-
-  <!-- Serviços -->
-
-  <div id="Servicos" class="container mt-5">
-    <h2><i class="bi bi-gear-fill"></i> Serviços</h2>
-
-    <div class="container mt-5 ">
-        <div class="row ">
-
-        <!-- Utilização do @for para carregar os cards dos serviços-->
-        @for (item of cardServicos; track $index) {
-
-            <div class="col-md-4 shadow-sm ">
-                <div class="card text-white cursor hover">
-                  <img src={{item.urlImagem}} class="card-img " alt="Imagem do Carro">
-                  <div class="card-img-overlay d-flex align-items-center justify-content-center">
-                    <h5 class="card-title">{{item.titulo}}</h5>
-                  </div>
-                </div>
-              </div>
-
-        }
-    </div>
-
-      </div>
-      <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
-        <button class="btn btn-light me-md-2" type="button" (click)="rolarPara('carosel')">Voltar ao topo</button>
-      </div>
-
-  </div>
-
-
-
-  <!-- Sobre -->
-
-  <div id="Sobre" class="container mt-5">
-    <h2><i class="bi bi-info-circle-fill"></i> Sobre</h2>
-
-    <div class="card mb-3 mt-5">
-        <img src="https://www.dgmassessoria.com.br/wp-content/uploads/2019/09/quem-somos.png" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Sobre</h5>
-          <p class="card-text p1">
-            Bem-vindo à Novocar, sua concessionária de carros de luxo de confiança. Com uma paixão inigualável por automóveis de alto desempenho, oferecemos uma experiência exclusiva para entusiastas de carros que procuram nada menos que a excelência.</p>
+            <div class="d-flex flex-wrap gap-2">
+              <button type="button" class="btn botoes-card px-4" (click)="rolarPara('Modelos')">
+                <i class="bi bi-car-front-fill me-2" aria-hidden="true"></i>Ver veículos
+              </button>
+              <button type="button" class="btn btn-hero-outline px-4" (click)="rolarPara('Servicos')">
+                Nossos serviços
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-      <br>
-      <br>
-      <br>
+      }
+    </div>
 
-      <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
-        <button class="btn btn-light me-md-2" type="button" (click)="rolarPara('carosel')">Voltar ao topo</button>
-      </div>
-
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselNovoCar" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselNovoCar" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Próximo</span>
+    </button>
   </div>
+</section>
 
+<!-- ═══════════════════════ DIFERENCIAIS ═══════════════════════ -->
+<section class="faixa-diferenciais">
+  <div class="container">
+    <ul class="diferenciais">
+      @for (diferencial of diferenciais; track diferencial.titulo) {
+        <li class="diferencial">
+          <i [class]="'bi ' + diferencial.icone" aria-hidden="true"></i>
+          <div>
+            <span class="diferencial-titulo">{{ diferencial.titulo }}</span>
+            <span class="diferencial-texto">{{ diferencial.texto }}</span>
+          </div>
+        </li>
+      }
+    </ul>
+  </div>
+</section>
 
+<!-- ═══════════════════════ MODELOS ═══════════════════════ -->
+<section id="Modelos" class="secao container">
+  <header class="secao-cabecalho">
+    <div>
+      <span class="secao-etiqueta">Estoque</span>
+      <h2 class="secao-titulo">Nossos modelos</h2>
+      <p class="secao-descricao">
+        Veículos selecionados, com procedência garantida e prontos para o test drive.
+      </p>
+    </div>
 
-  <!-- Modal -->
+    <span class="secao-contador">
+      {{ carros.length }} veículo{{ carros.length === 1 ? '' : 's' }} no estoque
+    </span>
+  </header>
 
-<div>
-    @if (confirmar) {
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirmação</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  @if (carregando) {
+    <div class="row g-4">
+      @for (esqueleto of [1, 2, 3, 4, 5, 6]; track esqueleto) {
+        <div class="col-sm-6 col-lg-4">
+          <div class="veiculo-card esqueleto" aria-hidden="true">
+            <div class="esqueleto-foto"></div>
+            <div class="veiculo-corpo">
+              <div class="esqueleto-linha w-50"></div>
+              <div class="esqueleto-linha w-75"></div>
+              <div class="esqueleto-linha w-100"></div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else if (carros.length === 0) {
+    <div class="estado-vazio">
+      <i class="bi bi-inbox" aria-hidden="true"></i>
+      <h3>Nenhum veículo disponível no momento</h3>
+      <p>Novos modelos chegam toda semana. Fale com a gente para saber das próximas entradas.</p>
+      <button type="button" class="btn botoes-card px-4" (click)="irParaAgendamento()">
+        Falar com um consultor
+      </button>
+    </div>
+  } @else {
+    <div class="row g-4">
+      @for (veiculo of carros; track veiculo.id) {
+        <div class="col-sm-6 col-lg-4">
+          <article class="veiculo-card">
+
+            <div class="veiculo-foto">
+              <a
+                class="veiculo-foto-link"
+                [routerLink]="['/veiculo', veiculo.id]"
+                [attr.aria-label]="'Ver detalhes de ' + veiculo.marca + ' ' + veiculo.modelo">
+
+                @if (veiculo.fotografiaPrincipal) {
+                  <img [src]="veiculo.fotografiaPrincipal" [alt]="veiculo.marca + ' ' + veiculo.modelo" loading="lazy" />
+                } @else {
+                  <div class="veiculo-sem-foto">
+                    <i class="bi bi-image" aria-hidden="true"></i>
+                    <span>Sem foto</span>
+                  </div>
+                }
+              </a>
+
+              <span [class]="classeSituacao(veiculo.situacao)">
+                {{ rotuloSituacao(veiculo.situacao) }}
+              </span>
+            </div>
+
+            <div class="veiculo-corpo">
+              <span class="veiculo-marca">{{ veiculo.marca }}</span>
+              <h3 class="veiculo-modelo">
+                <a [routerLink]="['/veiculo', veiculo.id]">{{ veiculo.modelo }}</a>
+              </h3>
+
+              <ul class="veiculo-specs">
+                <li><i class="bi bi-calendar3" aria-hidden="true"></i>{{ veiculo.anofabricacao }}/{{ veiculo.ano }}</li>
+                <li><i class="bi bi-speedometer2" aria-hidden="true"></i>{{ veiculo.quilometragem | number: '1.0-0' }} km</li>
+                <li><i class="bi bi-gear" aria-hidden="true"></i>{{ veiculo.tipoTransmissao }}</li>
+                <li><i class="bi bi-fuel-pump" aria-hidden="true"></i>{{ veiculo.tipoCombustivel }}</li>
+                <li><i class="bi bi-palette" aria-hidden="true"></i>{{ veiculo.cor }}</li>
+              </ul>
+
+              @if (veiculo.descricao) {
+                <p class="veiculo-descricao">{{ veiculo.descricao }}</p>
+              }
+
+              <div class="veiculo-rodape">
+                <div class="veiculo-preco">
+                  <span class="preco-rotulo">À vista</span>
+                  <strong>{{ veiculo.preco | currency: 'BRL' }}</strong>
                 </div>
-                <div class="modal-body">
-                  Você realmente deseja comprar esse veiculo?
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                  <button type="button" class="btn btn-primary">Sim</button>
+
+                <div class="veiculo-acoes">
+                  <a class="veiculo-detalhe-link" [routerLink]="['/veiculo', veiculo.id]">
+                    Ver detalhes <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                  </a>
+
+                  <button
+                    type="button"
+                    class="btn botoes-card"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalInteresse"
+                    [disabled]="!estaDisponivel(veiculo)"
+                    (click)="abrirInteresse(veiculo)">
+                    {{ estaDisponivel(veiculo) ? 'Tenho interesse' : 'Indisponível' }}
+                  </button>
                 </div>
               </div>
             </div>
-          </div>
-    }
 
+          </article>
+        </div>
+      }
+    </div>
+  }
+</section>
+
+<!-- ═══════════════════════ PROMOÇÃO (banner) ═══════════════════════ -->
+<div class="container">
+  <app-corpo-filho
+    [titulo1]="'Feliz natal é na NovoCar'"
+    [detalhes]="'Preços imperdíveis, condições de pagamento melhores ainda!'"
+    (acaoAlerta)="evento()">
+  </app-corpo-filho>
 </div>
 
-<!-- Voltar para o topo -->
+<!-- ═══════════════════════ SERVIÇOS ═══════════════════════ -->
+<section id="Servicos" class="secao container">
+  <header class="secao-cabecalho">
+    <div>
+      <span class="secao-etiqueta">Depois da compra</span>
+      <h2 class="secao-titulo">Nossos serviços</h2>
+      <p class="secao-descricao">
+        Cuidamos do seu carro do primeiro test drive à próxima revisão.
+      </p>
+    </div>
+  </header>
 
+  <div class="row g-4">
+    @for (servico of cardServicos; track servico.titulo) {
+      <div class="col-md-4">
+        <article class="servico-card">
+          <img [src]="servico.urlImagem" [alt]="servico.titulo" loading="lazy" />
+          <div class="servico-overlay">
+            <i [class]="'bi ' + servico.icone" aria-hidden="true"></i>
+            <h3>{{ servico.titulo }}</h3>
+            <p>{{ servico.descricao }}</p>
+          </div>
+        </article>
+      </div>
+    }
+  </div>
+</section>
 
+<!-- ═══════════════════════ SOBRE ═══════════════════════ -->
+<section id="Sobre" class="secao container">
+  <header class="secao-cabecalho">
+    <div>
+      <span class="secao-etiqueta">Quem somos</span>
+      <h2 class="secao-titulo">Sobre a NovoCar</h2>
+    </div>
+  </header>
 
+  <div class="row g-4 align-items-center">
+    <div class="col-lg-6">
+      <div class="sobre-imagem">
+        <img
+          src="./assets/imagens/equipe.jpg"
+          alt="Equipe da NovoCar"
+          loading="lazy" />
+      </div>
+    </div>
 
+    <div class="col-lg-6">
+      <p class="sobre-texto">
+        Bem-vindo à <strong>NovoCar</strong>, sua concessionária de carros de luxo de confiança.
+        Com uma paixão inigualável por automóveis de alto desempenho, oferecemos uma experiência
+        exclusiva para entusiastas que procuram nada menos que a excelência.
+      </p>
+      <p class="sobre-texto">
+        Cada veículo do nosso estoque passa por uma avaliação criteriosa e por um processo de
+        preparação completo. Nosso time acompanha você da escolha do modelo ao pós-venda,
+        com transparência em cada etapa.
+      </p>
 
+      <dl class="sobre-numeros">
+        @for (numero of numeros; track numero.rotulo) {
+          <div>
+            <dt>{{ numero.valor }}</dt>
+            <dd>{{ numero.rotulo }}</dd>
+          </div>
+        }
+      </dl>
 
+      <button type="button" class="btn botoes-card px-4 mt-2" (click)="irParaAgendamento()">
+        <i class="bi bi-calendar-check me-2" aria-hidden="true"></i>Agendar test drive
+      </button>
+    </div>
+  </div>
+</section>
 
+<!-- ═══════════════════════ VOLTAR AO TOPO ═══════════════════════ -->
+<button type="button" class="btn-topo" (click)="topFunction()" aria-label="Voltar ao topo">
+  <i class="bi bi-arrow-up" aria-hidden="true"></i>
+</button>
 
+<!-- ═══════════════════════ MODAL: INTERESSE ═══════════════════════ -->
+<div
+  class="modal fade"
+  id="modalInteresse"
+  tabindex="-1"
+  aria-labelledby="modalInteresseLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content modal-interesse">
 
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="modalInteresseLabel">Tenho interesse</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
 
+      <div class="modal-body">
+        @if (veiculoSelecionado) {
+          <div class="modal-veiculo">
+            @if (veiculoSelecionado.fotografiaPrincipal) {
+              <img [src]="veiculoSelecionado.fotografiaPrincipal" [alt]="veiculoSelecionado.modelo" />
+            } @else {
+              <div class="modal-sem-foto"><i class="bi bi-image" aria-hidden="true"></i></div>
+            }
+            <div>
+              <span class="veiculo-marca">{{ veiculoSelecionado.marca }}</span>
+              <h3 class="modal-veiculo-nome">{{ veiculoSelecionado.modelo }}</h3>
+              <span class="modal-veiculo-preco">{{ veiculoSelecionado.preco | currency: 'BRL' }}</span>
+            </div>
+          </div>
 
+          <p class="modal-texto">
+            Agende um test drive e conheça o carro pessoalmente. Um consultor da NovoCar
+            entra em contato para confirmar o melhor horário para você.
+          </p>
+        }
+      </div>
 
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Fechar</button>
+        <button type="button" class="btn botoes-card px-4" (click)="irParaAgendamento(veiculoSelecionado)">
+          Agendar test drive
+        </button>
+      </div>
 
+    </div>
+  </div>
+</div>

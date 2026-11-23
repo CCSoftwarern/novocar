@@ -1,1 +1,166 @@
-<p>consulta works!</p>
+<p-toast position="top-right" />
+<p-confirmDialog />
+
+<div class="card">
+  <p-table
+    #tabela
+    [value]="agendamentos"
+    [loading]="carregando"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [globalFilterFields]="['cliente', 'veiculo', 'observacao', 'status']"
+    [tableStyle]="{ 'min-width': '58rem' }"
+    rowHover
+    stripedRows>
+
+    <ng-template #caption>
+      <div class="table-header">
+        <div class="table-title">
+          <i class="pi pi-calendar" aria-hidden="true"></i>
+          <div>
+            <span class="title">Test drives agendados</span>
+            <span class="subtitle">{{ agendamentos.length }} agendamento(s)</span>
+          </div>
+        </div>
+
+        <div class="table-actions">
+          <input
+            pInputText
+            type="text"
+            class="search-input"
+            placeholder="Buscar por cliente, veículo..."
+            (input)="tabela.filterGlobal($any($event.target).value, 'contains')" />
+
+          <p-button
+            icon="pi pi-refresh"
+            [text]="true"
+            [rounded]="true"
+            pTooltip="Atualizar lista"
+            tooltipPosition="top"
+            (onClick)="carregar()" />
+        </div>
+      </div>
+
+      <div class="resumo">
+        <span class="resumo-item pendente">
+          <i class="pi pi-clock" aria-hidden="true"></i>
+          {{ pendentes }} pendente(s)
+        </span>
+        <span class="resumo-item confirmado">
+          <i class="pi pi-check-circle" aria-hidden="true"></i>
+          {{ confirmados }} confirmado(s)
+        </span>
+        <span class="resumo-item finalizado">
+          <i class="pi pi-flag" aria-hidden="true"></i>
+          {{ finalizados }} finalizado(s)
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template #header>
+      <tr>
+        <th>Cliente</th>
+        <th>Veículo</th>
+        <th style="width: 12rem">Data e horário</th>
+        <th>Observação</th>
+        <th style="width: 9rem">Situação</th>
+        <th style="width: 8rem">Ações</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-agendamento>
+      <tr>
+        <td>
+          <div class="cliente-cell">
+            <i class="pi pi-user" aria-hidden="true"></i>
+            <span>{{ agendamento.cliente }}</span>
+          </div>
+        </td>
+        <td>
+          <div class="veiculo-cell">
+            @if (agendamento.fotografia) {
+              <img [src]="agendamento.fotografia" [alt]="agendamento.veiculo ?? ''" class="thumb" />
+            } @else {
+              <span class="thumb thumb-vazia"><i class="pi pi-image" aria-hidden="true"></i></span>
+            }
+            <span>{{ agendamento.veiculo }}</span>
+          </div>
+        </td>
+        <td>
+          <div class="data-cell">
+            <span class="data-principal">{{ agendamento.dataHora | date: 'dd/MM/yyyy' }}</span>
+            <span class="data-hora">{{ agendamento.dataHora | date: 'HH:mm' }}</span>
+          </div>
+        </td>
+        <td>
+          @if (agendamento.observacao) {
+            <span class="observacao" [pTooltip]="agendamento.observacao" tooltipPosition="top">
+              {{ agendamento.observacao }}
+            </span>
+          } @else {
+            <span class="sem-observacao">—</span>
+          }
+        </td>
+        <td>
+          <p-tag
+            [value]="rotuloStatus(agendamento.status)"
+            [severity]="severidadeStatus(agendamento.status)" />
+        </td>
+        <td>
+          <div class="acoes">
+            @if (agendamento.status === 'PENDENTE') {
+              <p-button
+                icon="pi pi-check"
+                severity="success"
+                [text]="true"
+                [rounded]="true"
+                pTooltip="Confirmar"
+                tooltipPosition="top"
+                (onClick)="confirmar(agendamento)" />
+            }
+
+            @if (agendamento.status === 'CONFIRMADO') {
+              <p-button
+                icon="pi pi-check-circle"
+                severity="info"
+                [text]="true"
+                [rounded]="true"
+                pTooltip="Marcar como concluído"
+                tooltipPosition="top"
+                (onClick)="concluir(agendamento)" />
+            }
+
+            @if (agendamento.status === 'PENDENTE' || agendamento.status === 'CONFIRMADO') {
+              <p-button
+                icon="pi pi-times"
+                severity="danger"
+                [text]="true"
+                [rounded]="true"
+                pTooltip="Cancelar"
+                tooltipPosition="top"
+                (onClick)="cancelar(agendamento)" />
+            } @else {
+              <span class="sem-acoes">Finalizado</span>
+            }
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="6">
+          <div class="empty-table">
+            <i class="pi pi-calendar-times" aria-hidden="true"></i>
+            <span>Nenhum test drive agendado.</span>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #footer>
+      <span class="text-sm text-color-secondary">Total: {{ agendamentos.length }} agendamento(s)</span>
+    </ng-template>
+  </p-table>
+</div>

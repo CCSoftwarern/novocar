@@ -1,0 +1,253 @@
+<app-cabecalho></app-cabecalho>
+
+<main class="pagina-veiculo">
+  <div class="container">
+
+    <!-- ═══════════════════════ TRILHA ═══════════════════════ -->
+    <nav class="trilha" aria-label="Trilha de navegação">
+      <a routerLink="/">Início</a>
+      <i class="bi bi-chevron-right" aria-hidden="true"></i>
+      <a routerLink="/" fragment="Modelos">Modelos</a>
+      <i class="bi bi-chevron-right" aria-hidden="true"></i>
+      <span class="trilha-atual">
+        {{ veiculo ? veiculo.marca + ' ' + veiculo.modelo : 'Detalhes do veículo' }}
+      </span>
+    </nav>
+
+    @if (carregando) {
+      <!-- ═══════════════════════ ESQUELETO ═══════════════════════ -->
+      <div class="row g-4" aria-hidden="true">
+        <div class="col-lg-7">
+          <div class="esqueleto-foto"></div>
+          <div class="esqueleto-linha w-50 mt-4"></div>
+          <div class="esqueleto-linha w-100"></div>
+          <div class="esqueleto-linha w-75"></div>
+        </div>
+        <div class="col-lg-5">
+          <div class="esqueleto-linha w-25"></div>
+          <div class="esqueleto-linha w-75 esqueleto-titulo"></div>
+          <div class="esqueleto-linha w-50"></div>
+          <div class="esqueleto-linha w-100 mt-4"></div>
+          <div class="esqueleto-linha w-100"></div>
+          <div class="esqueleto-linha w-100"></div>
+        </div>
+      </div>
+      <p class="visually-hidden" role="status">Carregando veículo...</p>
+
+    } @else if (naoEncontrado) {
+      <!-- ═══════════════════════ 404 ═══════════════════════ -->
+      <div class="estado">
+        <i class="bi bi-search" aria-hidden="true"></i>
+        <h1>Veículo não encontrado</h1>
+        <p>
+          O anúncio pode ter sido removido ou o link está incorreto.
+          Veja os modelos disponíveis na loja.
+        </p>
+        <a class="btn botoes-card px-4" routerLink="/" fragment="Modelos">
+          Ver modelos disponíveis
+        </a>
+      </div>
+
+    } @else if (erro) {
+      <!-- ═══════════════════════ ERRO ═══════════════════════ -->
+      <div class="estado">
+        <i class="bi bi-wifi-off" aria-hidden="true"></i>
+        <h1>Não foi possível carregar</h1>
+        <p>{{ erro }}</p>
+        <button type="button" class="btn botoes-card px-4" (click)="tentarNovamente()">
+          Tentar novamente
+        </button>
+      </div>
+
+    } @else if (veiculo) {
+      <!-- ═══════════════════════ VEÍCULO ═══════════════════════ -->
+      <article class="detalhe-grid">
+
+        <div class="detalhe-foto">
+          <div class="foto-principal">
+            @if (veiculo.fotografiaPrincipal) {
+              <img
+                [src]="veiculo.fotografiaPrincipal"
+                [alt]="veiculo.marca + ' ' + veiculo.modelo"
+                loading="eager" />
+            } @else {
+              <div class="foto-vazia">
+                <i class="bi bi-image" aria-hidden="true"></i>
+                <span>Foto em breve</span>
+              </div>
+            }
+
+            <span [class]="classeSituacao(veiculo.situacao)">
+              {{ rotuloSituacao(veiculo.situacao) }}
+            </span>
+          </div>
+        </div>
+
+        <aside class="detalhe-painel painel">
+          <span class="painel-marca">{{ veiculo.marca }}</span>
+          <h1 class="painel-modelo">{{ veiculo.modelo }}</h1>
+
+          <ul class="specs">
+            <li>
+              <i class="bi bi-calendar3" aria-hidden="true"></i>
+              <span>Ano</span>
+              <strong>{{ veiculo.anofabricacao }}/{{ veiculo.ano }}</strong>
+            </li>
+            <li>
+              <i class="bi bi-speedometer2" aria-hidden="true"></i>
+              <span>Quilometragem</span>
+              <strong>{{ veiculo.quilometragem | number: '1.0-0' }} km</strong>
+            </li>
+            <li>
+              <i class="bi bi-gear" aria-hidden="true"></i>
+              <span>Câmbio</span>
+              <strong>{{ veiculo.tipoTransmissao }}</strong>
+            </li>
+            <li>
+              <i class="bi bi-fuel-pump" aria-hidden="true"></i>
+              <span>Combustível</span>
+              <strong>{{ veiculo.tipoCombustivel }}</strong>
+            </li>
+            <li>
+              <i class="bi bi-palette" aria-hidden="true"></i>
+              <span>Cor</span>
+              <strong>{{ veiculo.cor }}</strong>
+            </li>
+          </ul>
+
+          <div class="preco">
+            <span class="preco-rotulo">À vista</span>
+            <strong class="preco-valor">{{ veiculo.preco | currency: 'BRL' }}</strong>
+            <span class="preco-nota">Aceitamos troca e financiamento</span>
+          </div>
+
+          <div class="acoes">
+            <button
+              type="button"
+              class="btn botoes-card btn-agendar"
+              [disabled]="!estaDisponivel(veiculo)"
+              (click)="agendar()">
+              <i class="bi bi-calendar-check me-2" aria-hidden="true"></i>
+              {{ estaDisponivel(veiculo) ? 'Agendar test drive' : 'Indisponível para test drive' }}
+            </button>
+
+            <a class="btn btn-outline-dark" routerLink="/" fragment="Contato">
+              <i class="bi bi-chat-dots me-2" aria-hidden="true"></i>Falar com um consultor
+            </a>
+          </div>
+
+          @if (!estaDisponivel(veiculo)) {
+            <p class="aviso-situacao">
+              <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
+              Este veículo está {{ rotuloSituacao(veiculo.situacao) | lowercase }}.
+              Fale com a equipe para conhecer opções parecidas.
+            </p>
+          }
+
+          <ul class="garantias">
+            <li><i class="bi bi-shield-check" aria-hidden="true"></i>Procedência verificada</li>
+            <li><i class="bi bi-file-earmark-check" aria-hidden="true"></i>Laudo cautelar completo</li>
+            <li><i class="bi bi-credit-card" aria-hidden="true"></i>Financiamento facilitado</li>
+          </ul>
+        </aside>
+
+        <div class="detalhe-extra">
+          @if (veiculo.descricao) {
+            <section class="bloco">
+              <h2 class="bloco-titulo">Sobre este veículo</h2>
+              <p class="descricao">{{ veiculo.descricao }}</p>
+            </section>
+          }
+
+          <section class="bloco">
+            <h2 class="bloco-titulo">Ficha técnica</h2>
+
+            <dl class="ficha">
+              <div>
+                <dt>Marca</dt>
+                <dd>{{ veiculo.marca }}</dd>
+              </div>
+              <div>
+                <dt>Modelo</dt>
+                <dd>{{ veiculo.modelo }}</dd>
+              </div>
+              <div>
+                <dt>Ano</dt>
+                <dd>{{ veiculo.anofabricacao }}/{{ veiculo.ano }}</dd>
+              </div>
+              <div>
+                <dt>Quilometragem</dt>
+                <dd>{{ veiculo.quilometragem | number: '1.0-0' }} km</dd>
+              </div>
+              <div>
+                <dt>Câmbio</dt>
+                <dd>{{ veiculo.tipoTransmissao }}</dd>
+              </div>
+              <div>
+                <dt>Combustível</dt>
+                <dd>{{ veiculo.tipoCombustivel }}</dd>
+              </div>
+              <div>
+                <dt>Cor</dt>
+                <dd>{{ veiculo.cor }}</dd>
+              </div>
+              <div>
+                <dt>Situação</dt>
+                <dd>{{ rotuloSituacao(veiculo.situacao) }}</dd>
+              </div>
+            </dl>
+          </section>
+        </div>
+      </article>
+
+      <!-- ═══════════════════════ SEMELHANTES ═══════════════════════ -->
+      @if (semelhantes.length > 0) {
+        <section class="semelhantes">
+          <header class="secao-cabecalho">
+            <div>
+              <span class="secao-etiqueta">Você também pode gostar</span>
+              <h2 class="secao-titulo">Veículos semelhantes</h2>
+            </div>
+
+            <a class="link-ver-todos" routerLink="/" fragment="Modelos">
+              Ver todos os modelos <i class="bi bi-arrow-right" aria-hidden="true"></i>
+            </a>
+          </header>
+
+          <div class="row g-4">
+            @for (carro of semelhantes; track carro.id) {
+              <div class="col-sm-6 col-lg-4">
+                <a class="mini-card" [routerLink]="['/veiculo', carro.id]">
+                  <div class="mini-foto">
+                    @if (carro.fotografiaPrincipal) {
+                      <img
+                        [src]="carro.fotografiaPrincipal"
+                        [alt]="carro.marca + ' ' + carro.modelo"
+                        loading="lazy" />
+                    } @else {
+                      <i class="bi bi-image" aria-hidden="true"></i>
+                    }
+                  </div>
+
+                  <div class="mini-corpo">
+                    <span class="mini-marca">{{ carro.marca }}</span>
+                    <h3 class="mini-modelo">{{ carro.modelo }}</h3>
+                    <span class="mini-info">
+                      {{ carro.anofabricacao }}/{{ carro.ano }} ·
+                      {{ carro.quilometragem | number: '1.0-0' }} km ·
+                      {{ carro.tipoTransmissao }}
+                    </span>
+                    <strong class="mini-preco">{{ carro.preco | currency: 'BRL' }}</strong>
+                  </div>
+                </a>
+              </div>
+            }
+          </div>
+        </section>
+      }
+    }
+
+  </div>
+</main>
+
+<app-rodape></app-rodape>

@@ -1,52 +1,86 @@
-  <!-- Remove the container if you want to extend the Footer to full width. -->
 <div id="Contato" class="mt-5">
+  <footer class="bg-dark text-white">
 
-    <footer class="bg-dark text-center text-white">
-    <!-- Grid container -->
-    <div class="container p-4 pb-0">
-      <!-- Section: Social media -->
-      <section class="mb-4">
-        <!-- Facebook -->
-        <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
-          ><i class="fab fa-facebook-f"></i
-        ></a>
+    <div class="container py-5">
+      <div class="row g-4">
 
-        <!-- Twitter -->
-        <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
-          ><i class="fab fa-twitter"></i
-        ></a>
+        <!-- Marca -->
+        <div class="col-12 col-lg-4">
+          <a class="rodape-marca d-inline-flex align-items-center gap-2 mb-3" href="#carosel">
+            <i class="bi bi-car-front" aria-hidden="true"></i>
+            <span>NovoCar</span>
+          </a>
+          <p class="rodape-texto">
+            Concessionária de veículos novos e seminovos com procedência garantida,
+            financiamento facilitado e atendimento próximo do primeiro contato ao pós-venda.
+          </p>
 
-        <!-- Google -->
-        <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
-          ><i class="fab fa-google"></i
-        ></a>
+          <div class="rodape-sociais">
+            <a href="#!" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
+            <a href="#!" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+            <a href="#!" aria-label="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+            <a href="#!" aria-label="LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+          </div>
+        </div>
 
-        <!-- Instagram -->
-        <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
-          ><i class="fab fa-instagram"></i
-        ></a>
+        <!-- Navegação -->
+        <div class="col-6 col-lg-2">
+          <h2 class="rodape-titulo">Navegação</h2>
+          <ul class="rodape-lista">
+            <li><a href="#Modelos">Modelos</a></li>
+            <li><a href="#Servicos">Serviços</a></li>
+            <li><a href="#Sobre">Sobre</a></li>
+            <li><a routerLink="/login">Área do cliente</a></li>
+          </ul>
+        </div>
 
-        <!-- Linkedin -->
-        <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
-          ><i class="fab fa-linkedin-in"></i
-        ></a>
+        <!-- Atendimento -->
+        <div class="col-6 col-lg-3">
+          <h2 class="rodape-titulo">Atendimento</h2>
+          <ul class="rodape-lista">
+            <li><a href="#!">Agendar test drive</a></li>
+            <li><a href="#!">Financiamento</a></li>
+            <li><a href="#!">Troca de veículo</a></li>
+            <li><a href="#!">Pós-venda e revisão</a></li>
+          </ul>
+        </div>
 
-        <!-- Github -->
-        <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
-          ><i class="fab fa-github"></i
-        ></a>
-      </section>
-      <!-- Section: Social media -->
+        <!-- Contato -->
+        <div class="col-12 col-lg-3">
+          <h2 class="rodape-titulo">Contato</h2>
+          <ul class="rodape-contato">
+            <li>
+              <i class="bi bi-geo-alt" aria-hidden="true"></i>
+              <span>Av. das Nações, 1200 — Natal/RN</span>
+            </li>
+            <li>
+              <i class="bi bi-telephone" aria-hidden="true"></i>
+              <a href="tel:+558432110000">(84) 3211-0000</a>
+            </li>
+            <li>
+              <i class="bi bi-whatsapp" aria-hidden="true"></i>
+              <a href="#!">(84) 99999-0000</a>
+            </li>
+            <li>
+              <i class="bi bi-envelope" aria-hidden="true"></i>
+              <a href="mailto:contato&#64;novocar.com.br">contato&#64;novocar.com.br</a>
+            </li>
+            <li>
+              <i class="bi bi-clock" aria-hidden="true"></i>
+              <span>Seg a sex, 8h às 18h · Sáb, 8h às 12h</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
     </div>
-    <!-- Grid container -->
 
-    <!-- Copyright -->
-    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-      © 2026 Copyright:
-      <a class="text-white" href="#!">Claudemyr Medeiros - TSI IFRN</a>
+    <div class="rodape-base">
+      <div class="container d-flex flex-wrap justify-content-between gap-2 py-3">
+        <span>© 2026 NovoCar. Todos os direitos reservados.</span>
+        <span>Desenvolvido por Claudemyr Medeiros — TSI IFRN</span>
+      </div>
     </div>
-    <!-- Copyright -->
+
   </footer>
-
-  </div>
-  <!-- End of .container -->
+</div>

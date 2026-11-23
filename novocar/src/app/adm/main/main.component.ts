@@ -1,5 +1,5 @@
 import { Component, OnInit, Type, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MenuItem } from 'primeng/api';
 import { PanelMenuModule } from 'primeng/panelmenu';
@@ -31,6 +31,7 @@ const ABAS_POR_PERFIL: Record<string, string[]> = {
 })
 export class MainComponent implements OnInit {
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   readonly perfil = localStorage.getItem('perfil') ?? 'CLIENTE';
   readonly isAdmin = this.perfil === 'ADMIN';
@@ -44,6 +45,11 @@ export class MainComponent implements OnInit {
 
     // o cliente cai direto no agendamento
     if (!this.isAdmin) {
+      this.abrirAba('agendar', 'Agendar Test Drive', AgendarComponent);
+    }
+
+    // veio da home com "?carro=12" (botão "Tenho interesse")
+    if (this.route.snapshot.queryParamMap.get('carro')) {
       this.abrirAba('agendar', 'Agendar Test Drive', AgendarComponent);
     }
   }

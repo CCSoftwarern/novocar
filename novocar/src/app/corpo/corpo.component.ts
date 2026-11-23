@@ -1,98 +1,161 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { CorpoFilhoComponent } from "../corpo-filho/corpo-filho.component";
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+
+import { CorpoFilhoComponent } from '../corpo-filho/corpo-filho.component';
 import { CarrosService } from '../service/carros.service';
+import { Carro } from '../interfaces/carro';
 
 @Component({
-    selector: 'app-corpo',
-    imports: [CorpoFilhoComponent],
-    templateUrl: './corpo.component.html',
-    styleUrl: './corpo.component.css'
+  selector: 'app-corpo',
+  imports: [CommonModule, CorpoFilhoComponent, RouterLink],
+  templateUrl: './corpo.component.html',
+  styleUrl: './corpo.component.css'
 })
 export class CorpoComponent implements OnInit {
-  carros: any[] = [];
+  private carrosService = inject(CarrosService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
-  titulo= ''
+  carros: Carro[] = [];
+  carregando = true;
+  veiculoSelecionado: Carro | null = null;
 
-  confirmar: boolean = true; //
-
-
-
-  //imagens carrosel
-
-  imagensCarrocell: Array<{imagem:string, titulo:string, paragrafo:string, rotavermais:string, classe:string, tempo:number}>=[
-    {imagem:'./assets/imagens/01.JPG', titulo: 'Carros Esportivos', paragrafo: 'Os melhores carros você só encontra aqui!', rotavermais:'', classe:'carousel-item active', tempo: 10000},
-    {imagem:'./assets/imagens/02.JPG', titulo: 'Máquinas Incríveis', paragrafo: 'Temos carros incríveis para você que busca excelência e desempenho! ', rotavermais:'', classe:'carousel-item', tempo: 20000},
-    {imagem:'./assets/imagens/03.JPG', titulo: 'Você merece', paragrafo: 'Venha conhecer nossa coleção exclusiva e descubra um novo mundo"', rotavermais:'', classe:'carousel-item', tempo:500}
-
-  ]
-
-
-
-  // Criando um array com os meus cards de carros
-
-  // cardCarros: Array<{urlImagem:string, titulo:string, valor:number, breveDescricao:string, disponivel:number}>=[
-  //   {urlImagem:'https://nxboats.com.br/wp-content/uploads/2023/11/Lamborghini.jpg', titulo: 'Lamborghini', valor:1300000.00, breveDescricao: 'LAMBORGHINI GALLARDO SUPERLEGGERA LP 570-4 5.2 V10',disponivel:1},
-  //   {urlImagem:'https://nxboats.com.br/wp-content/uploads/2023/11/aston-martin.jpg', titulo: 'Aston Martin', valor:445000.00, breveDescricao: '5.2 V12 TURBO GASOLINA 770 ULTIMATE COUPE AUTOMÁTICO',disponivel:1},
-  //   {urlImagem:'https://nxboats.com.br/wp-content/uploads/2023/11/ferrari.jpg', titulo: 'Ferrari', valor:800255.00, breveDescricao: 'Ferrari 296 GTS 2024, supercarro híbrido de última geração, combinando um potente motor V6 biturbo',disponivel:1},
-  //   {urlImagem:'https://fotos-jornaldocarro-estadao.nyc3.cdn.digitaloceanspaces.com/wp-content/uploads/2024/04/23154842/Mercedes-AMG-GT-63S-E-Performance-e-hibrido-plug-in-mais-rapido-da-historia-da-Mercedes.png', titulo: 'Mercedes-AMG GT 63S', valor:1635000.00, breveDescricao: 'Novo GT 63S E Performance é o Mercedes-AMG mais rápido da história',disponivel:0}
-  // ];
-
-  // criando um array com os meus serviços
-  cardServicos: Array<{urlImagem:string, titulo:string}>=[
-    {urlImagem: 'https://assets.static-gm.com/Assets/642e8290-946c-450e-9225-537890d03fd4/0f0aad35-fa24-4014-ad09-f258a37df7cf/v-1628642228/Desktop.webp', titulo: 'Faça seu agendamento do serviço online'},
-    {urlImagem: 'https://assets.static-gm.com/Assets/642e8290-946c-450e-9225-537890d03fd4/3b8d7ffc-0d4f-4d9d-99d1-ee99a833cd5d/v-1628642429/Desktop.webp', titulo: 'Revisão'},
-    {urlImagem: 'https://assets.static-gm.com/Assets/642e8290-946c-450e-9225-537890d03fd4/62fc73aa-e57f-4ef3-9b80-80082150e4ca/v-1628642408/Desktop.webp', titulo: 'Assistência remota'}
+  // imagens do carrossel
+  imagensCarrocell: Array<{ imagem: string; titulo: string; paragrafo: string; classe: string }> = [
+    {
+      imagem: './assets/imagens/01.gif',
+      titulo: 'Carros Esportivos',
+      paragrafo: 'Os melhores carros você só encontra aqui!',
+      classe: 'carousel-item active'
+    },
+    {
+      imagem: './assets/imagens/02.gif',
+      titulo: 'Máquinas Incríveis',
+      paragrafo: 'Temos carros incríveis para você que busca excelência e desempenho!',
+      classe: 'carousel-item'
+    },
+    {
+      imagem: './assets/imagens/03.gif',
+      titulo: 'Você merece',
+      paragrafo: 'Venha conhecer nossa coleção exclusiva e descubra um novo mundo.',
+      classe: 'carousel-item'
+    }
   ];
 
+  // cards de serviços
+  cardServicos: Array<{ urlImagem: string; titulo: string; descricao: string; icone: string }> = [
+    {
+      urlImagem:
+        './assets/imagens/servico.jpeg',
+      titulo: 'Agende seu serviço online',
+      descricao: 'Escolha o dia e o horário direto pelo site, sem fila e sem ligação.',
+      icone: 'bi-calendar-check'
+    },
+    {
+      urlImagem:
+        './assets/imagens/revisao.jpg',
+      titulo: 'Revisão',
+      descricao: 'Revisões com peças originais e mecânicos certificados pela fábrica.',
+      icone: 'bi-wrench-adjustable'
+    },
+    {
+      urlImagem:
+        './assets/imagens/remoto.jpg',
+      titulo: 'Assistência remota',
+      descricao: 'Suporte 24h para você nunca ficar na mão, onde estiver.',
+      icone: 'bi-headset'
+    }
+  ];
 
+  // faixa de diferenciais abaixo do carrossel
+  diferenciais: Array<{ icone: string; titulo: string; texto: string }> = [
+    { icone: 'bi-patch-check', titulo: 'Procedência garantida', texto: 'Laudo cautelar em todos os veículos' },
+    { icone: 'bi-credit-card', titulo: 'Financiamento', texto: 'Simulação em até 60 meses' },
+    { icone: 'bi-calendar-check', titulo: 'Test drive', texto: 'Agende online e dirija' },
+    { icone: 'bi-shield-check', titulo: 'Garantia', texto: '3 meses de cobertura inclusa' }
+  ];
 
-  constructor( private carrosService: CarrosService) { }ngOnInit(): void {
+  // números da seção "Sobre"
+  numeros: Array<{ valor: string; rotulo: string }> = [
+    { valor: '12+', rotulo: 'anos de mercado' },
+    { valor: '4.800', rotulo: 'veículos entregues' },
+    { valor: '98%', rotulo: 'clientes satisfeitos' }
+  ];
+
+  ngOnInit(): void {
     this.onGetCarros();
+
+    // veio de outra página com "/#Modelos" (ex.: "Ver todos os modelos")
+    this.route.fragment.subscribe((fragmento) => {
+      if (!fragmento) {
+        return;
+      }
+
+      setTimeout(() => {
+        document.getElementById(fragmento)?.scrollIntoView({ behavior: 'smooth' });
+      }, 150);
+    });
   }
-;
 
-  // pra confirmar a compra
+  onGetCarros(): void {
+    this.carregando = true;
 
-  verConfirmar(){
-    this.confirmar = true;
-  }
-
-
-  // uma função para formatar moeda
-
-  formatarMoeda(valor: number): string {
-    const formatoMoeda = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
-    return formatoMoeda.format(valor); }
-
-
-evento(){
-  alert("Apartir daqui implementamos um simulador")
-}
-
-// sobe para o topo da página
-
-topFunction() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// vai até a sessão clicada
-
-rolarPara(section: string)
-  { document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' }); }
-
-
-  //carregar carros do backend
-onGetCarros(): void {
     this.carrosService.getCarros().subscribe({
       next: (response) => {
         this.carros = response;
-        console.log('Carros recebidos:', response);
+        this.carregando = false;
       },
       error: (error) => {
         console.error('Erro ao obter carros:', error);
+        this.carregando = false;
       }
     });
   }
 
+  estaDisponivel(veiculo: Carro): boolean {
+    return veiculo.situacao === 'DISPONIVEL';
+  }
 
+  rotuloSituacao(situacao: string): string {
+    switch (situacao) {
+      case 'DISPONIVEL': return 'Disponível';
+      case 'RESERVADO': return 'Reservado';
+      case 'VENDIDO': return 'Vendido';
+      default: return situacao;
+    }
+  }
+
+  // classe css do selo de situação (nunca quebra se vier nulo)
+  classeSituacao(situacao: string): string {
+    const valor = (situacao ?? '').toLowerCase();
+    return 'badge-situacao badge-' + (valor || 'indefinida');
+  }
+
+  abrirInteresse(veiculo: Carro): void {
+    this.veiculoSelecionado = veiculo;
+  }
+
+  irParaAgendamento(veiculo?: Carro | null): void {
+    if (!localStorage.getItem('token')) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    // leva o veículo escolhido na home para o formulário de agendamento
+    this.router.navigate(['/main'], veiculo?.id ? { queryParams: { carro: veiculo.id } } : {});
+  }
+
+  // chamado pelo banner do corpo-filho
+  evento(): void {
+    this.rolarPara('Modelos');
+  }
+
+  topFunction(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  rolarPara(section: string): void {
+    document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' });
+  }
 }

@@ -30,5 +30,8 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 usuario: teste1
 senha:123456
 
-como rodar build : cd H:\novocar\novocar
+como rodar build : 
+cd H:\novocar\novocar
 npx serve -s dist/novocar/browser -l 3000
+
+url Swegger: 

@@ -1,1 +1,228 @@
-<p>agendar works!</p>
+<p-toast position="top-right" />
+<p-confirmDialog />
+
+<div class="agendar">
+
+  <header class="pagina-cabecalho">
+    <span class="pagina-etiqueta">Test drive</span>
+    <h1 class="pagina-titulo">Agendar test drive</h1>
+    <p class="pagina-descricao">
+      @if (isAdmin) {
+        Selecione o cliente e o veículo, depois o dia e o horário. O agendamento entra na fila de test drives.
+      } @else {
+        Escolha o veículo, o dia e o horário. Nossa equipe confirma o agendamento por telefone.
+      }
+    </p>
+  </header>
+
+  <div class="row g-4">
+
+    <!-- ───────────── Formulário ───────────── -->
+    <div class="col-lg-5">
+      <section class="painel">
+        <h2 class="painel-titulo">
+          <i class="pi pi-calendar-plus" aria-hidden="true"></i>
+          Novo agendamento
+        </h2>
+
+        <form [formGroup]="form" (ngSubmit)="agendar()">
+
+          @if (isAdmin) {
+            <div class="campo" [class.campo-invalido]="c.idCliente.touched && c.idCliente.invalid">
+              <label for="cliente" class="campo-rotulo">Cliente <span class="req">*</span></label>
+
+              <p-select
+                inputId="cliente"
+                formControlName="idCliente"
+                [options]="clientes"
+                optionLabel="nome"
+                optionValue="id"
+                [fluid]="true"
+                [filter]="true"
+                filterBy="nome"
+                [showClear]="true"
+                [loading]="carregandoClientes"
+                placeholder="Selecione o cliente"
+                appendTo="body">
+
+                <ng-template #item let-cliente>
+                  <div class="opcao-cliente">
+                    <span class="opcao-avatar" aria-hidden="true">{{ cliente.nome.charAt(0) }}</span>
+                    <span class="opcao-nome">{{ cliente.nome }}</span>
+                  </div>
+                </ng-template>
+              </p-select>
+
+              @if (c.idCliente.touched && c.idCliente.hasError('required')) {
+                <small class="p-error">Escolha o cliente do agendamento.</small>
+              }
+              @if (!carregandoClientes && clientes.length === 0) {
+                <small class="campo-aviso">Nenhum cliente cadastrado ainda.</small>
+              }
+            </div>
+          }
+
+          <div class="campo" [class.campo-invalido]="c.idCarro.touched && c.idCarro.invalid">
+            <label for="veiculo" class="campo-rotulo">Veículo <span class="req">*</span></label>
+
+            <p-select
+              inputId="veiculo"
+              formControlName="idCarro"
+              [options]="opcoesVeiculos"
+              optionLabel="label"
+              optionValue="value"
+              [fluid]="true"
+              [filter]="true"
+              filterBy="label"
+              [showClear]="true"
+              [loading]="carregandoVeiculos"
+              placeholder="Selecione o veículo"
+              appendTo="body">
+
+              <ng-template #item let-opcao>
+                <div class="opcao-veiculo">
+                  @if (opcao.foto) {
+                    <img [src]="opcao.foto" alt="" class="opcao-foto" />
+                  } @else {
+                    <span class="opcao-foto opcao-sem-foto"><i class="pi pi-image" aria-hidden="true"></i></span>
+                  }
+                  <div class="opcao-texto">
+                    <span class="opcao-nome">{{ opcao.label }}</span>
+                    <span class="opcao-detalhe">{{ opcao.detalhe }}</span>
+                  </div>
+                </div>
+              </ng-template>
+            </p-select>
+
+            @if (c.idCarro.touched && c.idCarro.hasError('required')) {
+              <small class="p-error">Escolha o veículo do test drive.</small>
+            }
+            @if (!carregandoVeiculos && opcoesVeiculos.length === 0) {
+              <small class="campo-aviso">Nenhum veículo disponível para test drive no momento.</small>
+            }
+          </div>
+
+          <div class="campo" [class.campo-invalido]="c.dataHora.touched && c.dataHora.invalid">
+            <label for="dataHora" class="campo-rotulo">Data e horário <span class="req">*</span></label>
+
+            <p-datepicker
+              inputId="dataHora"
+              formControlName="dataHora"
+              [fluid]="true"
+              [showTime]="true"
+              hourFormat="24"
+              [stepMinute]="15"
+              dateFormat="dd/mm/yy"
+              [minDate]="hoje"
+              [showButtonBar]="true"
+              placeholder="dd/mm/aaaa hh:mm"
+              appendTo="body" />
+
+            @if (c.dataHora.touched && c.dataHora.hasError('required')) {
+              <small class="p-error">Informe a data e o horário.</small>
+            }
+            @if (c.dataHora.touched && c.dataHora.hasError('dataNoPassado')) {
+              <small class="p-error">Escolha um horário com pelo menos 30 minutos de antecedência.</small>
+            }
+          </div>
+
+          <div class="campo">
+            <label for="observacao" class="campo-rotulo">Observação</label>
+            <textarea
+              pTextarea
+              id="observacao"
+              formControlName="observacao"
+              rows="3"
+              maxlength="500"
+              class="w-full"
+              placeholder="Ex.: prefiro no período da tarde, tenho carteira definitiva..."></textarea>
+            <small class="campo-ajuda">Opcional · {{ c.observacao.value?.length || 0 }}/500</small>
+          </div>
+
+          <p-button
+            type="submit"
+            label="Agendar test drive"
+            icon="pi pi-check"
+            [loading]="salvando"
+            [disabled]="form.invalid || salvando"
+            styleClass="w-full" />
+        </form>
+      </section>
+    </div>
+
+    <!-- ───────────── Meus agendamentos ───────────── -->
+    <div class="col-lg-7">
+      <section class="painel">
+        <h2 class="painel-titulo">
+          <i class="pi pi-list" aria-hidden="true"></i>
+          Meus agendamentos
+          @if (agendamentos.length > 0) {
+            <span class="contador">{{ agendamentos.length }}</span>
+          }
+        </h2>
+
+        @if (isAdmin) {
+          <p class="painel-nota">
+            <i class="pi pi-info-circle" aria-hidden="true"></i>
+            <span>
+              Aqui aparecem apenas os <strong>seus</strong> agendamentos. Os que você cria para clientes
+              ficam em <strong>Test drive → Consultar</strong>, junto com os demais.
+            </span>
+          </p>
+        }
+
+        @if (carregandoAgendamentos) {
+          <p class="painel-vazio">Carregando agendamentos...</p>
+        } @else if (agendamentos.length === 0) {
+          <div class="painel-vazio">
+            <i class="pi pi-calendar-times" aria-hidden="true"></i>
+            <p>Você ainda não agendou nenhum test drive.</p>
+            <span>Use o formulário ao lado para escolher seu primeiro veículo.</span>
+          </div>
+        } @else {
+          <ul class="lista-agendamentos">
+            @for (agendamento of agendamentos; track agendamento.id) {
+              <li class="agendamento" [class.finalizado]="!podeCancelar(agendamento)">
+
+                <div class="data-selo" aria-hidden="true">
+                  <span class="data-dia">{{ agendamento.dataHora | date: 'dd' }}</span>
+                  <span class="data-mes">{{ agendamento.dataHora | date: 'MMM' }}</span>
+                </div>
+
+                <div class="agendamento-info">
+                  <span class="agendamento-veiculo">{{ agendamento.veiculo }}</span>
+                  <span class="agendamento-data">
+                    <i class="pi pi-clock" aria-hidden="true"></i>
+                    {{ agendamento.dataHora | date: "EEEE, dd 'de' MMMM 'às' HH:mm" }}
+                  </span>
+                  @if (agendamento.observacao) {
+                    <span class="agendamento-obs">{{ agendamento.observacao }}</span>
+                  }
+                </div>
+
+                <div class="agendamento-acoes">
+                  <p-tag
+                    [value]="rotuloStatus(agendamento.status)"
+                    [severity]="severidadeStatus(agendamento.status)" />
+
+                  @if (podeCancelar(agendamento)) {
+                    <p-button
+                      icon="pi pi-times"
+                      severity="danger"
+                      [text]="true"
+                      [rounded]="true"
+                      pTooltip="Cancelar agendamento"
+                      tooltipPosition="left"
+                      (onClick)="cancelar(agendamento)" />
+                  }
+                </div>
+
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    </div>
+
+  </div>
+</div>

@@ -23,7 +23,18 @@ export class CabecalhoComponent {
 
   //Para rolar para sessão
   rolarPara(section: string)
-  { document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' }); }
+  {
+    const alvo = document.getElementById(section);
+
+    // já está na home: rola direto
+    if (alvo) {
+      alvo.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+
+    // em outra página (ex.: detalhe do veículo): volta para a home na seção
+    this.router.navigate(['/'], { fragment: section });
+  }
 
   sair(): void {
     localStorage.removeItem('token');
